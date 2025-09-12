@@ -257,11 +257,13 @@
 
             try {
                 const resultText = await callVercelFunction(metaPrompt, 'qbErrorContainer');
+                console.log("Quick Builder Response:", resultText); // לוג לבדיקה
+                
                 document.getElementById('qbResult').textContent = resultText.trim();
                 document.getElementById('qbResultContainer').classList.remove('hidden');
                 document.getElementById('qbResultContainer').classList.add('fade-in');
             } catch (e) {
-                // Error is already displayed by callServerlessFunction
+                console.error("Quick Builder Error:", e);
             } finally {
                 qbBuildBtnText.classList.remove('hidden');
                 qbBuildBtnLoader.classList.add('hidden');
@@ -339,15 +341,29 @@
 
             try {
                 const resultText = await callVercelFunction(metaPrompt, 'slErrorContainer');
-                const resultJson = JSON.parse(resultText);
+                console.log("Strategy Lab Raw Response:", resultText); // לוג לבדיקה
+                
+                let resultJson;
+                try {
+                    // נסה לפרסר כ-JSON
+                    resultJson = JSON.parse(resultText);
+                    console.log("Parsed as JSON:", resultJson);
+                } catch (parseError) {
+                    console.log("Not JSON, treating as plain text");
+                    // אם זה לא JSON, תציג את הטקסט ישירות
+                    resultJson = {
+                        strategyText: "האסטרטגיה נבנתה בהצלחה על פי הבחירות שלך",
+                        finalPrompt: resultText
+                    };
+                }
 
-                document.getElementById('slStrategy').textContent = resultJson.strategyText;
-                document.getElementById('slResult').textContent = resultJson.finalPrompt;
+                document.getElementById('slStrategy').textContent = resultJson.strategyText || "האסטרטגיה מוכנה";
+                document.getElementById('slResult').textContent = resultJson.finalPrompt || resultText;
                 slResultContainer.classList.remove('hidden');
                 slResultContainer.classList.add('fade-in');
 
             } catch(e) {
-                // Error is already displayed by callVercelFunction
+                console.error("Strategy Lab Error:", e);
             } finally {
                 slBuildBtnText.classList.remove('hidden');
                 slBuildBtnLoader.classList.add('hidden');
