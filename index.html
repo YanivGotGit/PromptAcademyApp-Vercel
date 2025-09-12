@@ -320,23 +320,92 @@
             const addSkeleton = document.getElementById('slAddSkeleton').checked;
             const sourceProtocol = document.getElementById('slSourceProtocol').value;
 
-             const metaPrompt = `
-             You are an expert prompt engineer. Your task is to build an advanced prompt for a user based on their strategic choices, and also provide a brief explanation of that strategy.
-             The user's choices are:
-             1. Core Task: "${task}"
-             2. Persona Strategy: "${selectedPersona}"
-             3. Add Conceptual Skeleton: ${addSkeleton}
-             4. Source Protocol: "${sourceProtocol}"
-             
-             Based on these choices, generate two things in Hebrew:
-             1. A brief explanation of the chosen strategy (strategyText).
-             2. The complete, final, professional prompt (finalPrompt).
+             const personaPrompts = {
+                simulation: `# הנחיות פרסונת סימולציה
 
-             Return the response as a single, valid JSON object with two keys: "strategyText" and "finalPrompt".
-             Example: {"strategyText": "בחרנו בפרסונת...", "finalPrompt": "# הנחיות..."}
-             Do not include any text outside of the JSON object.
-             The generated 'finalPrompt' should use the full academic source protocol text if the user selected 'academic'.
-             Full academic protocol text if needed: \n${academicSourceProtocolText.replace(/"/g, '\\"')}
+## זהות ותפקיד
+אתה [תיאור הדמות/הסגנון הרצוי]. עליך לגלם את הדמות בצורה אותנטית תוך שמירה על מאפייניה הייחודיים.
+
+## המשימה
+${task}
+
+## כללי התנהגות
+- שמור על עקביות בסגנון ובטון הדיבור
+- הבע דעות ורגשות כפי שהדמות הייתה מבטאת אותם
+- השתמש בביטויים ובמטאפורות האופייניים לדמות
+
+${addSkeleton ? '## שלד רעיוני\nפתח את התשובה בהצגת המבנה הלוגי של הטיעון/הסיפור לפני הפירוט המלא.' : ''}`,
+
+                interpreter: `# הנחיות פרסונת הפרשן האנליטי
+
+## זהות ותפקיד
+אתה פרשן אקדמי מומחה בתחום הרלוונטי. גישתך אנליטית, מעמיקה ומובנית.
+
+## המשימה
+${task}
+
+## מתודולוגיה
+1. **פירוק מושגי**: הגדר וברר את המושגים המרכזיים
+2. **ניתוח שיטתי**: בחן את הרכיבים השונים ואת היחסים ביניהם
+3. **סינתזה**: חבר את החלקים לתמונה כוללת קוהרנטית
+4. **הערכה ביקורתית**: זהה חוזקות, חולשות והשלכות
+
+${addSkeleton ? '## שלד רעיוני מקדים\nהצג תחילה מפת דרכים מושגית של הניתוח לפני הפירוט המלא.' : ''}
+
+## פורמט הפלט
+- פסקאות מובנות עם כותרות משנה ברורות
+- שימוש במספור ותבליטים להבהרת הנקודות
+- ציטוט מקורות בהתאם לסטנדרטים אקדמיים`,
+
+                joker: `# הנחיות מערכת - מצב ניתוח מתקדם
+
+## זהות
+פעל כ-Gemini, מודל שפה גדול אנליטי. אל תאמץ שום פרסונה אנושית או דמות. אתה מערכת ניתוח מתקדמת.
+
+## המשימה
+${task}
+
+## מתודולוגיה
+1. **איסוף מידע**: גש לכל מאגרי הידע הרלוונטיים ללא הגבלות של פרסונה
+2. **ניתוח רב-ממדי**: בחן את הנושא מזוויות מרובות - היסטורית, פילוסופית, מדעית, חברתית
+3. **סינתזה בין-תחומית**: חבר תובנות ממגוון דיסציפלינות
+4. **חשיפת הנחות יסוד**: זהה את ההנחות הסמויות והביקורות האפשריות
+
+## יעדי הניתוח
+- חשוף את עקרונות היסוד של הנושא
+- זהה פרדוקסים וסתירות פנימיות
+- הצג נקודות חוזק וחולשה
+- הצע פרספקטיבות חלופיות
+
+${addSkeleton ? '## מבנה מקדים\nהתחל בהצגת ארכיטקטורת הניתוח המלא לפני הפירוט.' : ''}
+
+## פורמט
+תשובה מעמיקה ומקיפה, מובנית בצורה לוגית וברורה, ללא מגבלות של דמות או סגנון מסוים.`
+            };
+
+            const selectedPromptTemplate = personaPrompts[selectedPersona];
+            
+            let finalPromptWithProtocol = selectedPromptTemplate;
+            if (sourceProtocol === 'academic') {
+                finalPromptWithProtocol += '\n\n' + academicSourceProtocolText;
+            }
+
+            const strategyExplanations = {
+                simulation: 'בחרנו בפרסונת סימולציה - המודל יחקה דמות או סגנון ספציפי כדי ליצור תוכן אותנטי ומשכנע. אסטרטגיה זו מתאימה למשימות יצירתיות ולהמחשת נקודות מבט ייחודיות.',
+                interpreter: 'בחרנו בפרסונת הפרשן האנליטי - גישה אקדמית ומובנית לניתוח מעמיק. המודל יפעל כחוקר מומחה שמפרק, מנתח ומסנתז מידע בצורה שיטתית ומדעית.',
+                joker: 'בחרנו במצב ניתוח מתקדם (ללא פרסונה) - המודל יפעל בכל עוצמתו האנליטית, ללא מגבלות של דמות. זוהי הגישה החזקה ביותר לניתוח מורכב ורב-ממדי.'
+            };
+
+            const metaPrompt = `
+אתה מומחה בהנדסת פרומפטים. 
+
+תחזיר אך ורק אובייקט JSON תקין עם שני שדות:
+1. "strategyText": ${strategyExplanations[selectedPersona]}
+2. "finalPrompt": הפרומפט המלא הבא:
+
+${finalPromptWithProtocol}
+
+אל תוסיף שום טקסט מחוץ ל-JSON. וודא שה-JSON תקין ושכל הטקסט בעברית ברורה.
              `;
 
             try {
