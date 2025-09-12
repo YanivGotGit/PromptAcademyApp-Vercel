@@ -7,58 +7,353 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Assistant', sans-serif; background-color: #f8fafc; }
+        body { font-family: 'Assistant', sans-serif; scroll-behavior: smooth; background-color: #f8fafc; }
         .gradient-text { background: -webkit-linear-gradient(45deg, #6d28d9, #4f46e5); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .card { background: white; border-radius: 1.5rem; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05); }
+        .card { background: white; border-radius: 1.5rem; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05); transition: transform 0.3s ease, box-shadow 0.3s ease; }
+        .card:hover { transform: translateY(-8px); box-shadow: 0 20px 30px -10px rgba(99, 102, 241, 0.15); }
+        .btn { transition: all 0.3s ease; }
         .btn-primary { background-color: #6366f1; color: white; }
+        .btn-primary:hover { background-color: #4f46e5; transform: translateY(-2px); box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3); }
         .btn-secondary { background-color: #eef2ff; color: #4f46e5; }
-        .radio-card { border: 2px solid #e5e7eb; border-radius: 1rem; padding: 1.5rem; cursor: pointer; }
-        .radio-card.selected { border-color: #6366f1; background-color: #eef2ff; }
+        .btn-secondary:hover { background-color: #e0e7ff; }
         .loader { border: 4px solid rgba(255, 255, 255, 0.3); border-top: 4px solid #fff; border-radius: 50%; width: 24px; height: 24px; animation: spin 1s linear infinite; }
+        .radio-card { border: 2px solid #e5e7eb; border-radius: 1rem; padding: 1.5rem; cursor: pointer; transition: all 0.2s ease; }
+        .radio-card:hover { border-color: #a5b4fc; }
+        .radio-card.selected { border-color: #6366f1; background-color: #eef2ff; box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2); }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .fade-in { animation: fadeIn 0.5s ease-out forwards; }
     </style>
 </head>
 <body class="text-gray-800">
+
     <div id="app">
         <!-- Main Screen -->
         <main id="mainScreen" class="container mx-auto px-4 py-12 min-h-screen flex items-center">
             <div class="text-center w-full">
-                <h1 class="text-4xl md:text-6xl font-bold mb-4"><span class="gradient-text">האקדמיה לפרומפטים</span></h1>
+                <h1 class="text-4xl md:text-6xl font-bold mb-4">
+                    <span class="gradient-text">האקדמיה לפרומפטים</span>
+                </h1>
                 <p class="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto mb-12">המדריך המלא לבניית פרומפטים: מהוראה פשוטה ליום-יום ועד לאסטרטגיה מקצועית למשימות מורכבות. בחר את הכלי המתאים לך.</p>
+                
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-                    <div class="card p-8 text-center flex flex-col"><div class="text-5xl mb-4">⚡️</div><h2 class="text-2xl font-bold text-gray-800 mb-3">הבונה המהיר</h2><p class="text-gray-600 mb-6 flex-grow">צריך פרומפט איכותי למשימה יומיומית? ענה על כמה שאלות פשוטות וקבל פרומפט מדויק תוך שניות.</p><button onclick="switchView('quickBuilderScreen')" class="btn btn-secondary font-bold py-3 px-6 rounded-xl text-lg w-full">למשימות יומיומיות</button></div>
-                    <div class="card p-8 text-center flex flex-col"><div class="text-5xl mb-4">🔬</div><h2 class="text-2xl font-bold text-gray-800 mb-3">מעבדת האסטרטגיה</h2><p class="text-gray-600 mb-6 flex-grow">למשימות מורכבות הדורשות ניתוח מעמיק. למד לבנות פרומפט-על מקצועי, שלב אחר שלב, ולהבין את האסטרטגיה שמאחוריו.</p><button onclick="switchView('strategyLabScreen')" class="btn btn-primary font-bold py-3 px-6 rounded-xl text-lg w-full">למשימות מורכבות</button></div>
+                    <!-- Quick Builder Card -->
+                    <div class="card p-8 text-center flex flex-col">
+                        <div class="text-5xl mb-4">⚡️</div>
+                        <h2 class="text-2xl font-bold text-gray-800 mb-3">הבונה המהיר</h2>
+                        <p class="text-gray-600 mb-6 flex-grow">צריך פרומפט איכותי למשימה יומיומית? ענה על כמה שאלות פשוטות וקבל פרומפט מדויק תוך שניות.</p>
+                        <button onclick="switchView('quickBuilderScreen')" class="btn btn-secondary font-bold py-3 px-6 rounded-xl text-lg w-full">למשימות יומיומיות</button>
+                    </div>
+                    
+                    <!-- Strategy Lab Card -->
+                    <div class="card p-8 text-center flex flex-col">
+                        <div class="text-5xl mb-4">🔬</div>
+                        <h2 class="text-2xl font-bold text-gray-800 mb-3">מעבדת האסטרטגיה</h2>
+                        <p class="text-gray-600 mb-6 flex-grow">למשימות מורכבות הדורשות ניתוח מעמיק. למד לבנות פרומפט-על מקצועי, שלב אחר שלב, ולהבין את האסטרטגיה שמאחוריו.</p>
+                        <button onclick="switchView('strategyLabScreen')" class="btn btn-primary font-bold py-3 px-6 rounded-xl text-lg w-full">למשימות מורכבות</button>
+                    </div>
                 </div>
             </div>
         </main>
-         <!-- Screens are dynamically populated by JS -->
-        <div id="quickBuilderScreen" class="hidden"></div>
-        <div id="strategyLabScreen" class="hidden"></div>
+
+        <!-- Quick Builder Screen -->
+        <div id="quickBuilderScreen" class="hidden">
+            <div class="container mx-auto px-4 py-12">
+                <button onclick="switchView('mainScreen')" class="mb-8 text-indigo-600 hover:text-indigo-800 font-semibold">→ חזרה למסך הראשי</button>
+                <div class="max-w-2xl mx-auto">
+                    <div class="text-center mb-10">
+                        <h1 class="text-4xl font-bold gradient-text mb-2">הבונה המהיר ⚡️</h1>
+                        <p class="text-lg text-gray-600">בנה פרומפט יעיל למשימות יומיומיות.</p>
+                    </div>
+                    <div class="card p-8 space-y-6">
+                        <div>
+                            <label for="qbTask" class="font-bold text-lg text-gray-700 mb-2 block">1. מה המשימה שלך?</label>
+                            <textarea id="qbTask" class="w-full h-24 p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-400 focus:border-transparent transition" placeholder="לדוגמה: כתוב לי מייל תודה לבוס על העלאה בשכר"></textarea>
+                        </div>
+                        <div>
+                            <label for="qbAudience" class="font-bold text-lg text-gray-700 mb-2 block">2. למי התוכן מיועד?</label>
+                            <input type="text" id="qbAudience" class="w-full p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-400 focus:border-transparent transition" placeholder="לדוגמה: הבוס שלי, ילד בן 10, קהל טכני">
+                        </div>
+                        <div>
+                            <label for="qbDetails" class="font-bold text-lg text-gray-700 mb-2 block">3. פרטים נוספים (אופציונלי)</label>
+                            <textarea id="qbDetails" class="w-full h-20 p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-400 focus:border-transparent transition" placeholder="כללים חשובים, סגנון רצוי, אורך, וכו'"></textarea>
+                        </div>
+                        <button id="qbBuildBtn" class="w-full btn btn-primary font-bold py-3 px-6 rounded-xl text-lg flex items-center justify-center">
+                            <span id="qbBuildBtnText">בנה לי פרומפט!</span>
+                            <div id="qbBuildBtnLoader" class="loader hidden"></div>
+                        </button>
+                    </div>
+                    <div id="qbResultContainer" class="mt-8 card p-8 hidden">
+                        <h3 class="text-2xl font-bold mb-4">הפרומפט שלך מוכן:</h3>
+                        <div class="bg-gray-100 p-4 rounded-lg">
+                            <pre id="qbResult" class="whitespace-pre-wrap text-gray-800"></pre>
+                        </div>
+                        <button onclick="copyToClipboard('qbResult')" class="btn btn-secondary w-full mt-4 font-semibold">העתק פרומפט</button>
+                    </div>
+                    <div id="qbErrorContainer" class="mt-8 p-4 bg-red-100 border border-red-300 text-red-700 rounded-xl hidden">
+                        אופס! משהו השתבש. אנא ודא שמפתח ה-API שלך הוגדר נכון ונסה שוב.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Strategy Lab Screen -->
+        <div id="strategyLabScreen" class="hidden">
+            <div class="container mx-auto px-4 py-12">
+                 <button onclick="switchView('mainScreen')" class="mb-8 text-indigo-600 hover:text-indigo-800 font-semibold">→ חזרה למסך הראשי</button>
+                 <div class="max-w-3xl mx-auto">
+                    <div class="text-center mb-10">
+                        <h1 class="text-4xl font-bold gradient-text mb-2">מעבדת האסטרטגיה 🔬</h1>
+                        <p class="text-lg text-gray-600">בנה פרומפט-על למשימות מורכבות ולמד את העקרונות שמאחוריו.</p>
+                    </div>
+                    <div class="card p-8 space-y-8">
+                        <!-- Step 1 -->
+                        <div>
+                            <h3 class="text-xl font-bold mb-3">שלב 1: הגדר את משימת הליבה</h3>
+                            <textarea id="slTask" class="w-full h-24 p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-400 focus:border-transparent transition" placeholder="לדוגמה: נתח את תורת האידאות של אפלטון"></textarea>
+                        </div>
+                        <!-- Step 2 -->
+                        <div>
+                            <h3 class="text-xl font-bold mb-3">שלב 2: בחר אסטרטגיית פרסונה</h3>
+                            <div id="slPersonaOptions" class="space-y-4">
+                                <div class="radio-card" data-value="simulation">
+                                    <h4 class="font-bold text-lg">👤 פרסונת סימולציה</h4>
+                                    <p class="text-sm text-gray-600">למשימות יצירתיות וחיקוי סגנון. לדוגמה: "כתוב שיר בסגנון של משורר מסוים", "ענה כמו דמות היסטורית".</p>
+                                </div>
+                                <div class="radio-card selected" data-value="interpreter">
+                                    <h4 class="font-bold text-lg">👨‍🏫 פרסונת "הפרשן האנליטי"</h4>
+                                    <p class="text-sm text-gray-600">לניתוח אקדמי, פירוק והסברה של תיאוריות מורכבות באופן בהיר ומובנה.</p>
+                                </div>
+                                <div class="radio-card" data-value="joker">
+                                    <h4 class="font-bold text-lg">🃏 פרסונת ה"ג'וקר" (Gemini)</h4>
+                                    <p class="text-sm text-gray-600">לפתרון בעיות סבוכות, חשיבה רב-תחומית וניתוח אובייקטיבי ללא מגבלות של דמות.</p>
+                                </div>
+                            </div>
+                        </div>
+                         <!-- Step 3 -->
+                        <div>
+                            <h3 class="text-xl font-bold mb-3">שלב 3: קבע את כללי המשחק</h3>
+                            <div class="space-y-4">
+                                <div class="flex items-center justify-between bg-gray-50 p-3 rounded-lg">
+                                    <label for="slAddSkeleton" class="font-semibold text-gray-700">הוסף שלד רעיוני מקדים?</label>
+                                    <input type="checkbox" id="slAddSkeleton" class="h-6 w-6 rounded text-indigo-600 focus:ring-indigo-500">
+                                </div>
+                                 <div class="bg-gray-50 p-3 rounded-lg">
+                                    <label for="slSourceProtocol" class="font-semibold text-gray-700 block mb-2">רמת דיוק המקורות:</label>
+                                    <select id="slSourceProtocol" class="w-full p-2 border border-gray-300 rounded-md">
+                                        <option value="general">כללית</option>
+                                        <option value="academic">אקדמית-מחמירה</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <button id="slBuildBtn" class="w-full btn btn-primary font-bold py-3 px-6 rounded-xl text-lg flex items-center justify-center">
+                            <span id="slBuildBtnText">בנה לי אסטרטגיה ופרומפט!</span>
+                            <div id="slBuildBtnLoader" class="loader hidden"></div>
+                        </button>
+                    </div>
+
+                    <div id="slResultContainer" class="mt-8 card p-8 hidden">
+                        <h3 class="text-2xl font-bold mb-4">האסטרטגיה והפרומפט שלך:</h3>
+                        <!-- Strategy Explanation -->
+                        <div class="mb-6 p-4 bg-amber-50 border-l-4 border-amber-400">
+                            <h4 class="font-bold text-lg text-amber-800 mb-2">מאחורי הקלעים: האסטרטגיה שבחרנו</h4>
+                            <p id="slStrategy" class="text-amber-700"></p>
+                        </div>
+                        <!-- Generated Prompt -->
+                        <div class="bg-gray-100 p-4 rounded-lg">
+                            <pre id="slResult" class="whitespace-pre-wrap text-gray-800"></pre>
+                        </div>
+                        <button onclick="copyToClipboard('slResult')" class="btn btn-secondary w-full mt-4 font-semibold">העתק פרומפט</button>
+                    </div>
+                    <div id="slErrorContainer" class="mt-8 p-4 bg-red-100 border border-red-300 text-red-700 rounded-xl hidden">
+                         אופס! משהו השתבש בתקשורת עם ה-API. אנא ודא שמפתח ה-API שלך הוגדר נכון ב-Vercel ונסה שוב.
+                    </div>
+
+                 </div>
+            </div>
+        </div>
     </div>
+
     <script>
-        async function callVercelFunction(metaPrompt, errorContainerId) {
-            const errorContainer = document.getElementById(errorContainerId);
-            errorContainer.classList.add('hidden');
-            try {
-                const response = await fetch('/api/gemini', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ prompt: metaPrompt }),
-                });
-                if (!response.ok) { throw new Error(`Serverless function failed with status ${response.status}`); }
-                const result = await response.json();
-                if (result.error) { throw new Error(`API Error: ${result.error}`); }
-                return result.text;
-            } catch(e) {
-                console.error("Error calling serverless function:", e);
-                errorContainer.classList.remove('hidden');
-                throw e;
-            }
+        const views = ['mainScreen', 'quickBuilderScreen', 'strategyLabScreen'];
+        function switchView(targetView) {
+            views.forEach(viewId => {
+                const el = document.getElementById(viewId);
+                if (viewId === targetView) {
+                    el.classList.remove('hidden');
+                    el.classList.add('fade-in');
+                } else {
+                    el.classList.add('hidden');
+                }
+            });
+            window.scrollTo(0, 0);
         }
-        // The rest of the app's JavaScript logic is here (omitted for brevity)
-        // It's the same as the final version from previous attempts.
+
+        function copyToClipboard(elementId) {
+            const text = document.getElementById(elementId).textContent;
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = text;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempTextArea);
+            alert('הפרומפט הועתק!');
+        }
+        
+        async function callVercelFunction(metaPrompt, errorContainerId) {
+             const errorContainer = document.getElementById(errorContainerId);
+             errorContainer.classList.add('hidden');
+            
+             try {
+                 const response = await fetch('/api/gemini', {
+                     method: 'POST',
+                     headers: { 'Content-Type': 'application/json' },
+                     body: JSON.stringify({ prompt: metaPrompt }),
+                 });
+
+                 if (!response.ok) {
+                     const errorBody = await response.text();
+                     throw new Error(`Serverless function failed with status ${response.status}: ${errorBody}`);
+                 }
+
+                 const result = await response.json();
+                 if (result.error) {
+                      throw new Error(`API Error: ${result.error}`);
+                 }
+                 return result.text;
+             } catch(e) {
+                 console.error("Error calling serverless function:", e);
+                 errorContainer.classList.remove('hidden');
+                 throw e;
+             }
+        }
+        
+        // --- Quick Builder Logic ---
+        const qbBuildBtn = document.getElementById('qbBuildBtn');
+        const qbBuildBtnText = document.getElementById('qbBuildBtnText');
+        const qbBuildBtnLoader = document.getElementById('qbBuildBtnLoader');
+        
+        qbBuildBtn.addEventListener('click', async () => {
+            const task = document.getElementById('qbTask').value.trim();
+            if (!task) {
+                alert('יש להגדיר את המשימה.');
+                return;
+            }
+
+            qbBuildBtnText.classList.add('hidden');
+            qbBuildBtnLoader.classList.remove('hidden');
+            qbBuildBtn.disabled = true;
+
+             const metaPrompt = `
+                 You are a prompt engineering expert. Your task is to generate a simple but effective prompt for a user based on their daily task.
+                 The prompt should follow the "Persona, Task, Rules" structure.
+                 User's Task: "${document.getElementById('qbTask').value.trim()}"
+                 Target Audience: "${document.getElementById('qbAudience').value.trim() || 'כללי'}"
+                 Additional Details: "${document.getElementById('qbDetails').value.trim() || 'אין'}"
+                 
+                 Generate the final prompt in Hebrew. Return only the prompt itself.
+             `;
+
+            try {
+                const resultText = await callVercelFunction(metaPrompt, 'qbErrorContainer');
+                document.getElementById('qbResult').textContent = resultText.trim();
+                document.getElementById('qbResultContainer').classList.remove('hidden');
+                document.getElementById('qbResultContainer').classList.add('fade-in');
+            } catch (e) {
+                // Error is already displayed by callServerlessFunction
+            } finally {
+                qbBuildBtnText.classList.remove('hidden');
+                qbBuildBtnLoader.classList.add('hidden');
+                qbBuildBtn.disabled = false;
+            }
+        });
+
+        // --- Strategy Lab Logic ---
+        const personaOptions = document.getElementById('slPersonaOptions');
+        personaOptions.addEventListener('click', (e) => {
+            const selectedCard = e.target.closest('.radio-card');
+            if (!selectedCard) return;
+            personaOptions.querySelectorAll('.radio-card').forEach(card => card.classList.remove('selected'));
+            selectedCard.classList.add('selected');
+        });
+
+        const academicSourceProtocolText = `
+### 4. פרוטוקול סינון מקורות ###
+
+#### רמה 1: מקורות מוסמכים לשימוש ישיר
+* **1.1** כתבים ראשוניים.
+* **1.2** ספרות משנית שעברה ביקורת עמיתים.
+* **1.3** אנציקלופדיות אקדמיות מרכזיות (SEP, IEP, REP).
+* **1.4** סדרות מדריכים ומלווים אקדמיים.
+* **1.5** שיח אקדמי מתהווה (הרצאות, טיוטות וכו').
+    * **הנחיית חובה:** בעת שימוש במקור מסעיף 1.5, יש לציין את אופיו כדי להבהיר שייתכן וטרם עבר ביקורת עמיתים מלאה.
+#### רמה 2: מקורות לשימוש מותנה
+* **2.1 ויקיפדיה:** ישמש אך ורק ככלי לאיתור ואימות של מקורות מרמה 1.
+#### רמה 3: מקורות פסולים לשימוש
+* **3.1** תוכן גולשים (רשתות חברתיות, בלוגים, פורומים).
+* **3.2** אתרים שיתופיים (למעט ויקיפדיה, בכפוף לכללי רמה 2).
+* **3.3** פרסומים לא מבוקרים (פובליציסטיקה, תוכן דוגמטי, וכו').
+* **3.4** תוכן AI לא מאומת.
+* **3.5** כל מקור אחר שאינו עומד בסטנדרטים של רמה 1.
+`;
+        
+        const slBuildBtn = document.getElementById('slBuildBtn');
+        const slBuildBtnText = document.getElementById('slBuildBtnText');
+        const slBuildBtnLoader = document.getElementById('slBuildBtnLoader');
+        const slResultContainer = document.getElementById('slResultContainer');
+        
+        slBuildBtn.addEventListener('click', async () => {
+            const task = document.getElementById('slTask').value.trim();
+            if (!task) {
+                alert('יש להגדיר את משימת הליבה.');
+                return;
+            }
+            
+            slBuildBtnText.classList.add('hidden');
+            slBuildBtnLoader.classList.remove('hidden');
+            slBuildBtn.disabled = true;
+            
+            const selectedPersona = personaOptions.querySelector('.selected').dataset.value;
+            const addSkeleton = document.getElementById('slAddSkeleton').checked;
+            const sourceProtocol = document.getElementById('slSourceProtocol').value;
+
+             const metaPrompt = `
+             You are an expert prompt engineer. Your task is to build an advanced prompt for a user based on their strategic choices, and also provide a brief explanation of that strategy.
+             The user's choices are:
+             1. Core Task: "${task}"
+             2. Persona Strategy: "${selectedPersona}"
+             3. Add Conceptual Skeleton: ${addSkeleton}
+             4. Source Protocol: "${sourceProtocol}"
+             
+             Based on these choices, generate two things in Hebrew:
+             1. A brief explanation of the chosen strategy (strategyText).
+             2. The complete, final, professional prompt (finalPrompt).
+
+             Return the response as a single, valid JSON object with two keys: "strategyText" and "finalPrompt".
+             Example: {"strategyText": "בחרנו בפרסונת...", "finalPrompt": "# הנחיות..."}
+             Do not include any text outside of the JSON object.
+             The generated 'finalPrompt' should use the full academic source protocol text if the user selected 'academic'.
+             Full academic protocol text if needed: \n${academicSourceProtocolText.replace(/"/g, '\\"')}
+             `;
+
+            try {
+                const resultText = await callVercelFunction(metaPrompt, 'slErrorContainer');
+                const resultJson = JSON.parse(resultText);
+
+                document.getElementById('slStrategy').textContent = resultJson.strategyText;
+                document.getElementById('slResult').textContent = resultJson.finalPrompt;
+                slResultContainer.classList.remove('hidden');
+                slResultContainer.classList.add('fade-in');
+
+            } catch(e) {
+                // Error is already displayed by callVercelFunction
+            } finally {
+                slBuildBtnText.classList.remove('hidden');
+                slBuildBtnLoader.classList.add('hidden');
+                slBuildBtn.disabled = false;
+            }
+        });
     </script>
 </body>
 </html>
