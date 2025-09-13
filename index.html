@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>האקדמיה לפרומפטים: המדריך המלא</title>
+    <!-- PWA Configuration -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="פרומפטים">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect fill='%236366f1' width='192' height='192' rx='24'/><text x='50%25' y='50%25' text-anchor='middle' dy='.35em' fill='white' font-size='100'>🎓</text></svg>">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
@@ -366,7 +372,16 @@ ${task}
 2. **ניתוח שיטתי**: בחן את הרכיבים השונים ואת היחסים ביניהם
 3. **סינתזה**: חבר את החלקים לתמונה כוללת קוהרנטית
 4. **הערכה ביקורתית**: זהה חוזקות, חולשות והשלכות
-
+<script>
+    // רישום Service Worker
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/service-worker.js')
+          .then(registration => console.log('Service Worker registered'))
+          .catch(err => console.log('Service Worker registration failed'));
+      });
+    }
+    </script>
 ## פורמט הפלט
 - פסקאות מובנות עם כותרות משנה ברורות
 - שימוש במספור ותבליטים להבהרת הנקודות
@@ -427,3 +442,4 @@ ${task}
     </script>
 </body>
 </html>
+
