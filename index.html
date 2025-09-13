@@ -125,8 +125,8 @@
                                     <p class="text-sm text-gray-600">לניתוח אקדמי, פירוק והסברה של תיאוריות מורכבות באופן בהיר ומובנה.</p>
                                 </div>
                                 <div class="radio-card" data-value="joker">
-                                    <h4 class="font-bold text-lg">🃏 פרסונת ה"ג'וקר" (Gemini)</h4>
-                                    <p class="text-sm text-gray-600">לפתרון בעיות סבוכות, חשיבה רב-תחומית וניתוח אובייקטיבי ללא מגבלות של דמות.</p>
+                                    <h4 class="font-bold text-lg">🃏 מצב ניתוח מתקדם</h4>
+                                    <p class="text-sm text-gray-600">הפעלת המודל בעוצמה מלאה ללא פרסונה. לפתרון בעיות סבוכות וניתוח רב-ממדי.</p>
                                 </div>
                             </div>
                         </div>
@@ -161,8 +161,8 @@
                             <p id="slStrategy" class="text-amber-700"></p>
                         </div>
                         <!-- Generated Prompt -->
-                        <div class="bg-gray-100 p-4 rounded-lg">
-                            <pre id="slResult" class="whitespace-pre-wrap text-gray-800"></pre>
+                        <div class="bg-gray-100 p-6 rounded-lg">
+                            <pre id="slResult" class="whitespace-pre-wrap text-gray-800 font-sans leading-relaxed"></pre>
                         </div>
                         <button onclick="copyToClipboard('slResult')" class="btn btn-secondary w-full mt-4 font-semibold">העתק פרומפט</button>
                     </div>
@@ -245,19 +245,25 @@
             qbBuildBtnLoader.classList.remove('hidden');
             qbBuildBtn.disabled = true;
 
-             const metaPrompt = `
-                 You are a prompt engineering expert. Your task is to generate a simple but effective prompt for a user based on their daily task.
-                 The prompt should follow the "Persona, Task, Rules" structure.
-                 User's Task: "${document.getElementById('qbTask').value.trim()}"
-                 Target Audience: "${document.getElementById('qbAudience').value.trim() || 'כללי'}"
-                 Additional Details: "${document.getElementById('qbDetails').value.trim() || 'אין'}"
-                 
-                 Generate the final prompt in Hebrew. Return only the prompt itself.
+            const metaPrompt = `
+אתה מומחה בהנדסת פרומפטים. עליך ליצור פרומפט פשוט אך יעיל בעברית.
+
+המשימה: ${document.getElementById('qbTask').value.trim()}
+קהל היעד: ${document.getElementById('qbAudience').value.trim() || 'כללי'}
+פרטים נוספים: ${document.getElementById('qbDetails').value.trim() || 'אין'}
+
+צור פרומפט בעברית שיכלול:
+1. הגדרת תפקיד/פרסונה (אם רלוונטי)
+2. תיאור המשימה הספציפית
+3. כללים וקווים מנחים
+4. פורמט הפלט הרצוי
+
+החזר אך ורק את הפרומפט המוכן, ללא הסברים נוספים.
              `;
 
             try {
                 const resultText = await callVercelFunction(metaPrompt, 'qbErrorContainer');
-                console.log("Quick Builder Response:", resultText); // לוג לבדיקה
+                console.log("Quick Builder Response:", resultText);
                 
                 document.getElementById('qbResult').textContent = resultText.trim();
                 document.getElementById('qbResultContainer').classList.remove('hidden');
@@ -305,23 +311,32 @@
         const slBuildBtnLoader = document.getElementById('slBuildBtnLoader');
         const slResultContainer = document.getElementById('slResultContainer');
         
-        slBuildBtn.addEventListener('click', async () => {
+        slBuildBtn.addEventListener('click', () => {
             const task = document.getElementById('slTask').value.trim();
             if (!task) {
                 alert('יש להגדיר את משימת הליבה.');
                 return;
             }
             
+            // אנימציה של טעינה למראית עין
             slBuildBtnText.classList.add('hidden');
             slBuildBtnLoader.classList.remove('hidden');
             slBuildBtn.disabled = true;
             
-            const selectedPersona = personaOptions.querySelector('.selected').dataset.value;
-            const addSkeleton = document.getElementById('slAddSkeleton').checked;
-            const sourceProtocol = document.getElementById('slSourceProtocol').value;
-
-             const personaPrompts = {
-                simulation: `# הנחיות פרסונת סימולציה
+            // השהייה קצרה למראית עין של "עיבוד"
+            setTimeout(() => {
+                const selectedPersona = personaOptions.querySelector('.selected').dataset.value;
+                const addSkeleton = document.getElementById('slAddSkeleton').checked;
+                const sourceProtocol = document.getElementById('slSourceProtocol').value;
+                
+                // בניית הפרומפט ישירות בצד הלקוח
+                let finalPrompt = '';
+                let strategyText = '';
+                
+                if (selectedPersona === 'simulation') {
+                    strategyText = 'בחרנו בפרסונת סימולציה - המודל יחקה דמות או סגנון ספציפי כדי ליצור תוכן אותנטי ומשכנע. אסטרטגיה זו מתאימה למשימות יצירתיות ולהמחשת נקודות מבט ייחודיות.';
+                    
+                    finalPrompt = `# הנחיות פרסונת סימולציה
 
 ## זהות ותפקיד
 אתה [תיאור הדמות/הסגנון הרצוי]. עליך לגלם את הדמות בצורה אותנטית תוך שמירה על מאפייניה הייחודיים.
@@ -333,10 +348,12 @@ ${task}
 - שמור על עקביות בסגנון ובטון הדיבור
 - הבע דעות ורגשות כפי שהדמות הייתה מבטאת אותם
 - השתמש בביטויים ובמטאפורות האופייניים לדמות
-
-${addSkeleton ? '## שלד רעיוני\nפתח את התשובה בהצגת המבנה הלוגי של הטיעון/הסיפור לפני הפירוט המלא.' : ''}`,
-
-                interpreter: `# הנחיות פרסונת הפרשן האנליטי
+- הימנע משבירת אופי גם כשנשאלת שאלות ישירות`;
+                    
+                } else if (selectedPersona === 'interpreter') {
+                    strategyText = 'בחרנו בפרסונת הפרשן האנליטי - גישה אקדמית ומובנית לניתוח מעמיק. המודל יפעל כחוקר מומחה שמפרק, מנתח ומסנתז מידע בצורה שיטתית ומדעית.';
+                    
+                    finalPrompt = `# הנחיות פרסונת הפרשן האנליטי
 
 ## זהות ותפקיד
 אתה פרשן אקדמי מומחה בתחום הרלוונטי. גישתך אנליטית, מעמיקה ומובנית.
@@ -350,17 +367,18 @@ ${task}
 3. **סינתזה**: חבר את החלקים לתמונה כוללת קוהרנטית
 4. **הערכה ביקורתית**: זהה חוזקות, חולשות והשלכות
 
-${addSkeleton ? '## שלד רעיוני מקדים\nהצג תחילה מפת דרכים מושגית של הניתוח לפני הפירוט המלא.' : ''}
-
 ## פורמט הפלט
 - פסקאות מובנות עם כותרות משנה ברורות
 - שימוש במספור ותבליטים להבהרת הנקודות
-- ציטוט מקורות בהתאם לסטנדרטים אקדמיים`,
-
-                joker: `# הנחיות מערכת - מצב ניתוח מתקדם
+- ציטוט מקורות בהתאם לסטנדרטים אקדמיים`;
+                    
+                } else if (selectedPersona === 'joker') {
+                    strategyText = 'בחרנו במצב ניתוח מתקדם (ללא פרסונה) - המודל יפעל בכל עוצמתו האנליטית, ללא מגבלות של דמות. זוהי הגישה החזקה ביותר לניתוח מורכב ורב-ממדי.';
+                    
+                    finalPrompt = `# הנחיות מערכת - מצב ניתוח מתקדם
 
 ## זהות
-פעל כ-Gemini, מודל שפה גדול אנליטי. אל תאמץ שום פרסונה אנושית או דמות. אתה מערכת ניתוח מתקדמת.
+פעל כמודל שפה גדול אנליטי. אל תאמץ שום פרסונה אנושית או דמות. אתה מערכת ניתוח מתקדמת.
 
 ## המשימה
 ${task}
@@ -377,67 +395,34 @@ ${task}
 - הצג נקודות חוזק וחולשה
 - הצע פרספקטיבות חלופיות
 
-${addSkeleton ? '## מבנה מקדים\nהתחל בהצגת ארכיטקטורת הניתוח המלא לפני הפירוט.' : ''}
-
 ## פורמט
-תשובה מעמיקה ומקיפה, מובנית בצורה לוגית וברורה, ללא מגבלות של דמות או סגנון מסוים.`
-            };
-
-            const selectedPromptTemplate = personaPrompts[selectedPersona];
-            
-            let finalPromptWithProtocol = selectedPromptTemplate;
-            if (sourceProtocol === 'academic') {
-                finalPromptWithProtocol += '\n\n' + academicSourceProtocolText;
-            }
-
-            const strategyExplanations = {
-                simulation: 'בחרנו בפרסונת סימולציה - המודל יחקה דמות או סגנון ספציפי כדי ליצור תוכן אותנטי ומשכנע. אסטרטגיה זו מתאימה למשימות יצירתיות ולהמחשת נקודות מבט ייחודיות.',
-                interpreter: 'בחרנו בפרסונת הפרשן האנליטי - גישה אקדמית ומובנית לניתוח מעמיק. המודל יפעל כחוקר מומחה שמפרק, מנתח ומסנתז מידע בצורה שיטתית ומדעית.',
-                joker: 'בחרנו במצב ניתוח מתקדם (ללא פרסונה) - המודל יפעל בכל עוצמתו האנליטית, ללא מגבלות של דמות. זוהי הגישה החזקה ביותר לניתוח מורכב ורב-ממדי.'
-            };
-
-            const metaPrompt = `
-אתה מומחה בהנדסת פרומפטים. 
-
-תחזיר אך ורק אובייקט JSON תקין עם שני שדות:
-1. "strategyText": ${strategyExplanations[selectedPersona]}
-2. "finalPrompt": הפרומפט המלא הבא:
-
-${finalPromptWithProtocol}
-
-אל תוסיף שום טקסט מחוץ ל-JSON. וודא שה-JSON תקין ושכל הטקסט בעברית ברורה.
-             `;
-
-            try {
-                const resultText = await callVercelFunction(metaPrompt, 'slErrorContainer');
-                console.log("Strategy Lab Raw Response:", resultText); // לוג לבדיקה
-                
-                let resultJson;
-                try {
-                    // נסה לפרסר כ-JSON
-                    resultJson = JSON.parse(resultText);
-                    console.log("Parsed as JSON:", resultJson);
-                } catch (parseError) {
-                    console.log("Not JSON, treating as plain text");
-                    // אם זה לא JSON, תציג את הטקסט ישירות
-                    resultJson = {
-                        strategyText: "האסטרטגיה נבנתה בהצלחה על פי הבחירות שלך",
-                        finalPrompt: resultText
-                    };
+תשובה מעמיקה ומקיפה, מובנית בצורה לוגית וברורה, ללא מגבלות של דמות או סגנון מסוים.`;
                 }
-
-                document.getElementById('slStrategy').textContent = resultJson.strategyText || "האסטרטגיה מוכנה";
-                document.getElementById('slResult').textContent = resultJson.finalPrompt || resultText;
+                
+                // הוספת שלד רעיוני אם נבחר
+                if (addSkeleton) {
+                    const skeletonText = selectedPersona === 'joker' 
+                        ? '\n\n## מבנה מקדים\nהתחל בהצגת ארכיטקטורת הניתוח המלא לפני הפירוט.'
+                        : '\n\n## שלד רעיוני מקדים\nהצג תחילה מפת דרכים מושגית של הניתוח לפני הפירוט המלא.';
+                    finalPrompt += skeletonText;
+                }
+                
+                // הוספת פרוטוקול מקורות אם נבחר
+                if (sourceProtocol === 'academic') {
+                    finalPrompt += '\n' + academicSourceProtocolText;
+                }
+                
+                // הצגת התוצאות
+                document.getElementById('slStrategy').textContent = strategyText;
+                document.getElementById('slResult').textContent = finalPrompt;
                 slResultContainer.classList.remove('hidden');
                 slResultContainer.classList.add('fade-in');
-
-            } catch(e) {
-                console.error("Strategy Lab Error:", e);
-            } finally {
+                
+                // החזרת הכפתור למצב רגיל
                 slBuildBtnText.classList.remove('hidden');
                 slBuildBtnLoader.classList.add('hidden');
                 slBuildBtn.disabled = false;
-            }
+            }, 500); // השהייה של חצי שנייה
         });
     </script>
 </body>
