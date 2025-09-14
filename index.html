@@ -43,14 +43,14 @@
                 <h1 class="text-4xl md:text-6xl font-bold mb-4">
                     <span class="gradient-text">האקדמיה לפרומפטים</span>
                 </h1>
-                <p class="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto mb-12">המדריך המלא לבניית פרומפטים: מהוראה פשוטה ליום-יום ועד לאסטרטגיה מקצועית למשימות מורכבות. בחר את הכלי המתאים לך.</p>
+                <p class="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto mb-12">המדריך המלא לבניית פרומפטים: מהוראה פשוטה ליום-יום ועד לאסטרטגיה מקצועית למשימות מורכבות. בחרו את הכלי המתאים.</p>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
                     <!-- Quick Builder Card -->
                     <div class="card p-8 text-center flex flex-col">
                         <div class="text-5xl mb-4">⚡️</div>
                         <h2 class="text-2xl font-bold text-gray-800 mb-3">הבונה המהיר</h2>
-                        <p class="text-gray-600 mb-6 flex-grow">צריך פרומפט איכותי למשימה יומיומית? ענה על כמה שאלות פשוטות וקבל פרומפט מדויק תוך שניות.</p>
+                        <p class="text-gray-600 mb-6 flex-grow">נדרש פרומפט איכותי למשימה יומיומית? ענו על כמה שאלות פשוטות וקבלו פרומפט מדויק תוך שניות.</p>
                         <button onclick="switchView('quickBuilderScreen')" class="btn btn-secondary font-bold py-3 px-6 rounded-xl text-lg w-full">למשימות יומיומיות</button>
                     </div>
                     
@@ -58,7 +58,7 @@
                     <div class="card p-8 text-center flex flex-col">
                         <div class="text-5xl mb-4">🔬</div>
                         <h2 class="text-2xl font-bold text-gray-800 mb-3">מעבדת האסטרטגיה</h2>
-                        <p class="text-gray-600 mb-6 flex-grow">למשימות מורכבות הדורשות ניתוח מעמיק. למד לבנות פרומפט-על מקצועי, שלב אחר שלב, ולהבין את האסטרטגיה שמאחוריו.</p>
+                        <p class="text-gray-600 mb-6 flex-grow">למשימות מורכבות הדורשות ניתוח מעמיק. לימדו לבנות פרומפט-על מקצועי, שלב אחר שלב, ולהבין את האסטרטגיה שמאחוריו.</p>
                         <button onclick="switchView('strategyLabScreen')" class="btn btn-primary font-bold py-3 px-6 rounded-xl text-lg w-full">למשימות מורכבות</button>
                     </div>
                 </div>
@@ -72,7 +72,7 @@
                 <div class="max-w-2xl mx-auto">
                     <div class="text-center mb-10">
                         <h1 class="text-4xl font-bold gradient-text mb-2">הבונה המהיר ⚡️</h1>
-                        <p class="text-lg text-gray-600">בנה פרומפט יעיל למשימות יומיומיות.</p>
+                        <p class="text-lg text-gray-600">בנו פרומפט יעיל למשימות יומיומיות.</p>
                     </div>
                     <div class="card p-8 space-y-6">
                         <div>
@@ -100,7 +100,7 @@
                         <button onclick="copyToClipboard('qbResult')" class="btn btn-secondary w-full mt-4 font-semibold">העתק פרומפט</button>
                     </div>
                     <div id="qbErrorContainer" class="mt-8 p-4 bg-red-100 border border-red-300 text-red-700 rounded-xl hidden">
-                        אופס! משהו השתבש. אנא ודא שמפתח ה-API שלך הוגדר נכון ונסה שוב.
+                        אופס! משהו השתבש. אנא ודאו שמפתח ה-API הוגדר נכון ונסו שוב.
                     </div>
                 </div>
             </div>
@@ -113,17 +113,17 @@
                  <div class="max-w-3xl mx-auto">
                     <div class="text-center mb-10">
                         <h1 class="text-4xl font-bold gradient-text mb-2">מעבדת האסטרטגיה 🔬</h1>
-                        <p class="text-lg text-gray-600">בנה פרומפט-על למשימות מורכבות ולמד את העקרונות שמאחוריו.</p>
+                        <p class="text-lg text-gray-600">בנו פרומפט-על למשימות מורכבות ולימדו את העקרונות שמאחוריו.</p>
                     </div>
                     <div class="card p-8 space-y-8">
                         <!-- Step 1 -->
                         <div>
-                            <h3 class="text-xl font-bold mb-3">שלב 1: הגדר את משימת הליבה</h3>
+                            <h3 class="text-xl font-bold mb-3">שלב 1: הגדירו את משימת הליבה</h3>
                             <textarea id="slTask" class="w-full h-24 p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-400 focus:border-transparent transition" placeholder="לדוגמה: נתח את תורת האידאות של אפלטון"></textarea>
                         </div>
                         <!-- Step 2 -->
                         <div>
-                            <h3 class="text-xl font-bold mb-3">שלב 2: בחר אסטרטגיית פרסונה</h3>
+                            <h3 class="text-xl font-bold mb-3">שלב 2: בחרו אסטרטגיית פרסונה (דמות)</h3>
                             <div id="slPersonaOptions" class="space-y-4">
                                 <div class="radio-card" data-value="simulation">
                                     <h4 class="font-bold text-lg">👤 פרסונת סימולציה</h4>
@@ -141,7 +141,7 @@
                         </div>
                          <!-- Step 3 -->
                         <div>
-                            <h3 class="text-xl font-bold mb-3">שלב 3: קבע את כללי המשחק</h3>
+                            <h3 class="text-xl font-bold mb-3">שלב 3: קובעים את כללי המשחק</h3>
                             <div class="space-y-4">
                                 <div class="flex items-center justify-between bg-gray-50 p-3 rounded-lg">
                                     <label for="slAddSkeleton" class="font-semibold text-gray-700">הוסף שלד רעיוני מקדים?</label>
@@ -176,7 +176,7 @@
                         <button onclick="copyToClipboard('slResult')" class="btn btn-secondary w-full mt-4 font-semibold">העתק פרומפט</button>
                     </div>
                     <div id="slErrorContainer" class="mt-8 p-4 bg-red-100 border border-red-300 text-red-700 rounded-xl hidden">
-                         אופס! משהו השתבש בתקשורת עם ה-API. אנא ודא שמפתח ה-API שלך הוגדר נכון ב-Vercel ונסה שוב.
+                         אופס! משהו השתבש בתקשורת עם ה-API. אנא ודאו שמפתח ה-API הוגדר נכון ב-Vercel ונסו שוב.
                     </div>
 
                  </div>
