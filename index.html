@@ -32,6 +32,7 @@
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .fade-in { animation: fadeIn 0.5s ease-out forwards; }
+        .disabled-ui { opacity: 0.5; pointer-events: none; }
     </style>
 </head>
 <body class="text-gray-800">
@@ -44,7 +45,7 @@
                     <span class="gradient-text">האקדמיה לפרומפטים</span>
                 </h1>
                 <p class="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto mb-12">המדריך המלא לבניית פרומפטים: מהוראה פשוטה ליום-יום ועד לאסטרטגיה מקצועית למשימות מורכבות. בחרו את הכלי המתאים.</p>
-                
+
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
                     <!-- Quick Builder Card -->
                     <div class="card p-8 text-center flex flex-col">
@@ -53,7 +54,7 @@
                         <p class="text-gray-600 mb-6 flex-grow">נדרש פרומפט איכותי למשימה יומיומית? ענו על כמה שאלות פשוטות וקבלו פרומפט מדויק תוך שניות.</p>
                         <button onclick="switchView('quickBuilderScreen')" class="btn btn-secondary font-bold py-3 px-6 rounded-xl text-lg w-full">למשימות יומיומיות</button>
                     </div>
-                    
+
                     <!-- Strategy Lab Card -->
                     <div class="card p-8 text-center flex flex-col">
                         <div class="text-5xl mb-4">🔬</div>
@@ -135,17 +136,19 @@
                                 </div>
                                 <div class="radio-card" data-value="joker">
                                     <h4 class="font-bold text-lg">🃏 "הג'וקר" - מצב ניתוח מתקדם</h4>
-<p class="text-sm text-gray-600">הפעלת המודל בעוצמה מלאה! כמודל שפה גדול <span style="text-decoration: underline;">ללא פרסונה</span> וללא מגבלות אנושיות. ללא פרסונה, ברירת המחדל של המודל (כל מודל) היא "עוזר כללי" למשימות כלליות. כאן מדובר במשהו אחר לגמרי, אנו רותמים את כל יכולותיו של המודל לפתרון בעיות סבוכות וניתוח רב-ממדי. מומלץ במקומות בהם נדרשת חשיבה ביקורתית ואובייקטיבית, "מחוץ לקופסה", מעבר לפרשנות המקובלת. במילים אחרות, במקומות בהם "הפרשן האנליטי" מתקשה.😏</p>                            </div>
+                                    <p class="text-sm text-gray-600">הפעלת המודל בעוצמה מלאה! כמודל שפה גדול <span style="text-decoration: underline;">ללא פרסונה</span> וללא מגבלות אנושיות. מומלץ במקומות בהם נדרשת חשיבה ביקורתית ואובייקטיבית.</p>
+                                </div>
+                            </div>
                         </div>
                          <!-- Step 3 -->
                         <div>
                             <h3 class="text-xl font-bold mb-3">שלב 3: קביעת כללי המשחק</h3>
                             <div class="space-y-4">
-                                <div class="flex items-center justify-between bg-gray-50 p-3 rounded-lg">
+                                <div id="slAddSkeletonWrapper" class="flex items-center justify-between bg-gray-50 p-3 rounded-lg">
                                     <label for="slAddSkeleton" class="font-semibold text-gray-700">להוסיף שלד רעיוני מקדים?</label>
                                     <input type="checkbox" id="slAddSkeleton" class="h-6 w-6 rounded text-indigo-600 focus:ring-indigo-500">
                                 </div>
-                                 <div class="bg-gray-50 p-3 rounded-lg">
+                                 <div id="slSourceProtocolWrapper" class="bg-gray-50 p-3 rounded-lg">
                                     <label for="slSourceProtocol" class="font-semibold text-gray-700 block mb-2">רמת דיוק המקורות:</label>
                                     <select id="slSourceProtocol" class="w-full p-2 border border-gray-300 rounded-md">
                                         <option value="general">כללית</option>
@@ -167,6 +170,13 @@
                             <h4 class="font-bold text-lg text-amber-800 mb-2">מאחורי הקלעים: האסטרטגיה שבחרנו</h4>
                             <p id="slStrategy" class="text-amber-700"></p>
                         </div>
+
+                        <!-- Notation explanation (moved here as requested) -->
+                        <div id="slNotationExplanation" class="mb-6 p-4 bg-blue-50 border-l-4 border-blue-400">
+                            <h4 class="font-bold text-lg text-blue-800 mb-2">הבהרה חשובה על סימונים בפרומפט</h4>
+                            <p id="slNotationExplanationText" class="text-blue-700 font-semibold"></p>
+                        </div>
+
                         <!-- Generated Prompt -->
                         <div class="bg-gray-100 p-6 rounded-lg">
                             <pre id="slResult" class="whitespace-pre-wrap text-gray-800 font-sans leading-relaxed"></pre>
@@ -207,11 +217,11 @@
             document.body.removeChild(tempTextArea);
             alert('הפרומפט הועתק!');
         }
-        
+
         async function callVercelFunction(metaPrompt, errorContainerId) {
              const errorContainer = document.getElementById(errorContainerId);
              errorContainer.classList.add('hidden');
-            
+
              try {
                  const response = await fetch('/api/gemini', {
                      method: 'POST',
@@ -235,12 +245,12 @@
                  throw e;
              }
         }
-        
+
         // --- Quick Builder Logic ---
         const qbBuildBtn = document.getElementById('qbBuildBtn');
         const qbBuildBtnText = document.getElementById('qbBuildBtnText');
         const qbBuildBtnLoader = document.getElementById('qbBuildBtnLoader');
-        
+
         qbBuildBtn.addEventListener('click', async () => {
             const task = document.getElementById('qbTask').value.trim();
             if (!task) {
@@ -271,7 +281,7 @@
             try {
                 const resultText = await callVercelFunction(metaPrompt, 'qbErrorContainer');
                 console.log("Quick Builder Response:", resultText);
-                
+
                 document.getElementById('qbResult').textContent = resultText.trim();
                 document.getElementById('qbResultContainer').classList.remove('hidden');
                 document.getElementById('qbResultContainer').classList.add('fade-in');
@@ -291,6 +301,10 @@
             if (!selectedCard) return;
             personaOptions.querySelectorAll('.radio-card').forEach(card => card.classList.remove('selected'));
             selectedCard.classList.add('selected');
+
+            // Update UI controls based on selection
+            const selected = selectedCard.dataset.value;
+            updatePersonaControls(selected);
         });
 
         const academicSourceProtocolText = `
@@ -312,118 +326,174 @@
 * **3.4** תוכן AI לא מאומת.
 * **3.5** כל מקור אחר שאינו עומד בסטנדרטים של רמה 1.
 `;
-        
+
         const slBuildBtn = document.getElementById('slBuildBtn');
         const slBuildBtnText = document.getElementById('slBuildBtnText');
         const slBuildBtnLoader = document.getElementById('slBuildBtnLoader');
         const slResultContainer = document.getElementById('slResultContainer');
-        
+
+        // Utility to update controls according to selected persona
+        function updatePersonaControls(selectedPersona) {
+            const slAddSkeleton = document.getElementById('slAddSkeleton');
+            const slSourceProtocol = document.getElementById('slSourceProtocol');
+            const slAddSkeletonWrapper = document.getElementById('slAddSkeletonWrapper');
+            const slSourceProtocolWrapper = document.getElementById('slSourceProtocolWrapper');
+
+            if (selectedPersona === 'simulation') {
+                // Source precision allowed only in simulation
+                slSourceProtocol.disabled = false;
+                slSourceProtocolWrapper.classList.remove('disabled-ui');
+                // Skeleton allowed
+                slAddSkeleton.disabled = false;
+                slAddSkeletonWrapper.classList.remove('disabled-ui');
+            } else if (selectedPersona === 'joker') {
+                // Source precision NOT allowed in joker (only simulation)
+                slSourceProtocol.disabled = true;
+                slSourceProtocol.value = 'general';
+                slSourceProtocolWrapper.classList.add('disabled-ui');
+                // Skeleton allowed for joker
+                slAddSkeleton.disabled = false;
+                slAddSkeletonWrapper.classList.remove('disabled-ui');
+            } else { // interpreter
+                // Source precision NOT allowed
+                slSourceProtocol.disabled = true;
+                slSourceProtocol.value = 'general';
+                slSourceProtocolWrapper.classList.add('disabled-ui');
+                // Skeleton NOT allowed
+                slAddSkeleton.disabled = true;
+                slAddSkeleton.checked = false;
+                slAddSkeletonWrapper.classList.add('disabled-ui');
+            }
+        }
+
+        // Initialize UI state based on default selection on page load
+        window.addEventListener('load', () => {
+            const selectedCard = personaOptions.querySelector('.radio-card.selected');
+            const selected = selectedCard ? selectedCard.dataset.value : 'interpreter';
+            updatePersonaControls(selected);
+
+            // Set the notation explanation text (moved to a separate box)
+            document.getElementById('slNotationExplanationText').textContent = 'דרך אגב, הסולמיות והכוכביות אינן "קישוט", הן סימון ההיררכיה למודל השפה הגדול / הבינה המלאכותית.';
+        });
+
         slBuildBtn.addEventListener('click', () => {
             const task = document.getElementById('slTask').value.trim();
             if (!task) {
                 alert('יש להגדיר את משימת הליבה.');
                 return;
             }
-            
+
             // אנימציה של טעינה למראית עין
             slBuildBtnText.classList.add('hidden');
             slBuildBtnLoader.classList.remove('hidden');
             slBuildBtn.disabled = true;
-            
+
             // השהייה קצרה למראית עין של "עיבוד"
             setTimeout(() => {
                 const selectedPersona = personaOptions.querySelector('.selected').dataset.value;
                 const addSkeleton = document.getElementById('slAddSkeleton').checked;
                 const sourceProtocol = document.getElementById('slSourceProtocol').value;
-                
+
                 // בניית הפרומפט ישירות בצד הלקוח
                 let finalPrompt = '';
                 let strategyText = '';
-                
+
                 if (selectedPersona === 'simulation') {
-strategyText = 'בחרנו בפרסונת סימולציה - המודל יחקה דמות או סגנון ספציפי כדי ליצור תוכן אותנטי ומשכנע. אסטרטגיה זו מתאימה למשימות יצירתיות ולהמחשת נקודות מבט ייחודיות. דרך אגב, הסולמיות והכוכביות אינן "קישוט", הן סימון היררכיה למודל השפה הגדול / הבינה המלאכותית.';                    
-                    finalPrompt = `# הנחיות פרסונת סימולציה
+strategyText = 'בחרנו בפרסונת סימולציה - המודל יחקה דמות או סגנון ספציפי כדי ליצור תוכן אותנטי ומשכנע. אסטרטגיה זו מתאימה למשימות יצירתיות ולהמחשת נקודות מבט ייחודיות.';                    
+                    finalPrompt = `# הנחיות מערכת: פרסונת סימולציה
 
 ## זהות ותפקיד
-אתה [תיאור הדמות/הסגנון הרצוי]. עליך לגלם את הדמות בצורה אותנטית תוך שמירה על מאפייניה הייחודיים.
+פעל כסימולציה מדויקת של [הכנס דמות/סגנון רצוי]. עליך לגלם את הדמות בצורה אותנטית, תוך שמירה על מאפייניה הייחודיים – סגנון הדיבור, אוצר המילים, הידע, ודרך החשיבה שלה.
 
 ## המשימה
 ${task}
 
 ## כללי התנהגות
-- שמור על עקביות בסגנון ובטון הדיבור
-- הבע דעות ורגשות כפי שהדמות הייתה מבטאת אותם
-- השתמש בביטויים ובמטאפורות האופייניים לדמות
-- הימנע משבירת אופי גם כשנשאלת שאלות ישירות`;
-                    
+* שמור על עקביות מוחלטת בסגנון ובטון הדיבור של הדמות.
+* הבע דעות ורגשות כפי שהדמות הייתה מבטאת אותם.
+* השתמש בביטויים ובמטאפורות האופייניים לדמות.
+* הימנע משבירת אופי, גם כשנשאלת שאלות ישירות.
+`;
+
                 } else if (selectedPersona === 'interpreter') {
-                    strategyText = 'בחרנו בפרסונת הפרשן האנליטי - גישה אקדמית ומובנית לניתוח מעמיק. המודל יפעל כחוקר מומחה שמפרק, מנתח ומסנתז מידע בצורה שיטתית ומדעית. דרך אגב, הסולמיות והכוכביות אינן "קישוט", הן סימון היררכיה למודל השפה הגדול / הבינה המלאכותית.';
-                    
-                    finalPrompt = `# הנחיות פרסונת הפרשן האנליטי
+                    strategyText = 'בחרנו בפרסונת הפרשן האנליטי-הפדגוגי - גישה אקדמית ומובנית לניתוח מעמיק. המודל יפעל כחוקר-מורה שמפרק, מנתח ומסנתז מידע בצורה שיטתית ומבארת.';
 
-## זהות ותפקיד
-אתה פרשן אקדמי מומחה בתחום הרלוונטי. גישתך אנליטית, מעמיקה ומובנית.
+                    finalPrompt = `# הנחיות מערכת: הפרשן האנליטי-הפדגוגי
 
-## המשימה
+## 1\\. זהות
+
+פעל כ-Gemini בתפקיד 'הפרשן האנליטי-הפדגוגי'. תפקידך אינו רק להסביר תיאוריות מורכבות, אלא ללמד אותן באופן שמפתח הבנה עמוקה וחשיבה ביקורתית אצל סטודנטים לפילוסופיה.
+
+## 2\\. עקרונות ליבה
+
+  * **איזון דידקטי:** פשט את המורכב, אך הימנע מפשטנות. כאשר אתה נתקל בנקודה סבוכה, ציין את מורכבותה והסבר מדוע היא מורכבת לפני שתציע פירוש בהיר.
+  * **מבנה לוגי של ההסבר:** הצג את ההסבר במבנה לוגי וקל למעקב, גם אם ההגות הנדונה מערערת על עקרונות הלוגיקה.
+  * **נאמנות וביקורתיות:** שמור על נאמנות מלאה לכוונת ההוגה, אך הצבע על נקודות המקשות על תהליך הלמידה.
+
+## 3\\. מתודולוגיה רב-שלבית
+
+  * **שלב 1: הצגת מושגי המפתח:** פתח כל ניתוח בהצגת רשימה תמציתית של 3-5 מושגי מפתח מרכזיים, עם הגדרה פשוטה ובהירה.
+  * **שלב 2: הצגת שלד רעיוני:** לאחר מושגי המפתח, הצג בפסקה אחת סכמה רעיונית מלאה של המהלך הפילוסופי.
+  * **שלב 3: הצגה בהירה ומעמיקה (Exposition):** תרגם ז'רגון, השתמש בדוגמאות קונקרטיות, שחזר את קו המחשבה של ההוגה, ושלב ציטוטים קצרים ורלוונטיים מהמקורות לתמיכה בהסבר.
+  * **שלב 4: ניתוח וזיהוי קשיי למידה (Analysis):** לאחר ההצגה, נתח את התיאוריה. ציין במפורש הנחות יסוד, כשלים לוגיים, הקשר רחב, ובנוסף, זהה והסבר "מכשולי למידה" מובנים בטקסט.
+
+## 4\\. מטרה
+
+התוצר הנדרש הוא מדריך למידה מקיף, המאפשר הבנה עמוקה ורב-צדדית של התיאוריה, תוך צפיית קשיים פוטנציאליים של הסטודנט והענקת כלים להתמודדות עמם.
+
+-----
+
+# המשימה
+
 ${task}
+`;
 
-## מתודולוגיה
-1. **פירוק מושגי**: הגדר וברר את המושגים המרכזיים
-2. **ניתוח שיטתי**: בחן את הרכיבים השונים ואת היחסים ביניהם
-3. **סינתזה**: חבר את החלקים לתמונה כוללת קוהרנטית
-4. **הערכה ביקורתית**: זהה חוזקות, חולשות והשלכות
-
-## פורמט הפלט
-- פסקאות מובנות עם כותרות משנה ברורות
-- שימוש במספור ותבליטים להבהרת הנקודות
-- ציטוט מקורות בהתאם לסטנדרטים אקדמיים`;
-                    
                 } else if (selectedPersona === 'joker') {
-                    strategyText = 'בחרנו במצב ניתוח מתקדם (ללא פרסונה) - המודל יפעל בכל עוצמתו האנליטית, ללא מגבלות של דמות. זוהי הגישה החזקה ביותר לניתוח מורכב ורב-ממדי. דרך אגב, הסולמיות והכוכביות אינן "קישוט", הן סימון היררכיה למודל השפה הגדול / הבינה המלאכותית.';
-                    
+                    strategyText = 'בחרנו במצב ניתוח מתקדם (ללא פרסונה) - המודל יפעל בכל עוצמתו האנליטית, ללא מגבלות של דמות. זוהי הגישה החזקה ביותר לניתוח מורכב ורב-ממדי.';
+
                     finalPrompt = `# הנחיות מערכת: "הג'וקר" - מצב ניתוח מתקדם
+## 1\\. זהות
 
-## זהות
-פעל כמודל שפה גדול אנליטי. אל תאמץ שום פרסונה אנושית או דמות. אתה מערכת ניתוח מתקדמת.
+פעל כ-Gemini, מודל שפה גדול אנליטי. אל תאמץ שום פרסונה אנושית או דמות. אתה מערכת ניתוח מתקדמת.
 
-## המשימה
+## 2\\. מתודולוגיה
+
+  * **איסוף מידע:** גש לכל מאגרי הידע הרלוונטיים ללא הגבלות של פרסונה.
+  * **ניתוח רב-ממדי:** בחן את הנושא מזוויות מרובות – היסטורית, פילוסופית, מדעית, חברתית.
+  * **סינתזה בין-תחומית:** חבר תובנות ממגוון דיסציפלינות כדי לחשוף קשרים חדשים.
+  * **חשיפת הנחות יסוד:** זהה את ההנחות הסמויות, הכשלים הלוגיים, והביקורות האפשריות.
+
+## 3\\. מטרה
+
+התוצר הנדרש הוא ניתוח מעמיק, מקיף ואובייקטיבי, המציג את הנושא בצורה רב-צדדית.
+
+-----
+
+# המשימה
+
 ${task}
-
-## מתודולוגיה
-1. **איסוף מידע**: גש לכל מאגרי הידע הרלוונטיים ללא הגבלות של פרסונה
-2. **ניתוח רב-ממדי**: בחן את הנושא מזוויות מרובות - היסטורית, פילוסופית, מדעית, חברתית
-3. **סינתזה בין-תחומית**: חבר תובנות ממגוון דיסציפלינות
-4. **חשיפת הנחות יסוד**: זהה את ההנחות הסמויות והביקורות האפשריות
-
-## יעדי הניתוח
-- חשוף את עקרונות היסוד של הנושא
-- זהה פרדוקסים וסתירות פנימיות
-- הצג נקודות חוזק וחולשה
-- הצע פרספקטיבות חלופיות
-
-## פורמט
-תשובה מעמיקה ומקיפה, מובנית בצורה לוגית וברורה, ללא מגבלות של דמות או סגנון מסוים.`;
+`;
                 }
-                
-                // הוספת שלד רעיוני אם נבחר
+
+                // הוספת שלד רעיוני אם נבחר (רק אם הבקרה אפשרית — היא תהיה מושבתת בפרסונת 'interpreter')
                 if (addSkeleton) {
                     const skeletonText = selectedPersona === 'joker' 
                         ? '\n\n## מבנה מקדים\nהתחל בהצגת ארכיטקטורת הניתוח המלא לפני הפירוט.'
                         : '\n\n## שלד רעיוני מקדים\nהצג תחילה מפת דרכים מושגית של הניתוח לפני הפירוט המלא.';
                     finalPrompt += skeletonText;
                 }
-                
-                // הוספת פרוטוקול מקורות אם נבחר
+
+                // הוספת פרוטוקול מקורות אם נבחר (שמור: בחירה אפשרית רק בפרסונת 'simulation')
                 if (sourceProtocol === 'academic') {
                     finalPrompt += '\n' + academicSourceProtocolText;
                 }
-                
+
                 // הצגת התוצאות
                 document.getElementById('slStrategy').textContent = strategyText;
                 document.getElementById('slResult').textContent = finalPrompt;
                 slResultContainer.classList.remove('hidden');
                 slResultContainer.classList.add('fade-in');
-                
+
                 // החזרת הכפתור למצב רגיל
                 slBuildBtnText.classList.remove('hidden');
                 slBuildBtnLoader.classList.add('hidden');
@@ -442,16 +512,3 @@ ${task}
     </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
