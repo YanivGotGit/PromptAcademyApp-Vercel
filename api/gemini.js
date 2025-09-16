@@ -1,4 +1,4 @@
-const { GoogleGenerativeAI } = require("@google/generativetools");
+const { GoogleGenerativeAI } = require("@google/generative-ai");
 
 module.exports = async (req, res) => {
   if (req.method !== 'POST') {
@@ -20,7 +20,7 @@ module.exports = async (req, res) => {
     const genAI = new GoogleGenerativeAI(API_KEY);
     
     if (type === 'identify_persona') {
-      // --- Stage 1: Identify Persona with new, improved prompt ---
+      // --- Stage 1: Identify Persona with the improved, specific prompt ---
       const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest" });
       
       const personaIdentificationPrompt = `Your task is to identify a specific persona from the user's request. Follow these rules strictly:
