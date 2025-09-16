@@ -27,6 +27,7 @@
         .radio-card { border: 2px solid #e5e7eb; border-radius: 1rem; padding: 1.5rem; cursor: pointer; transition: all 0.2s ease; }
         .radio-card:hover { border-color: #a5b4fc; }
         .radio-card.selected { border-color: #6366f1; background-color: #eef2ff; box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2); }
+        input[type="checkbox"]:disabled { cursor: not-allowed; opacity: 0.6; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .fade-in { animation: fadeIn 0.5s ease-out forwards; }
@@ -291,6 +292,9 @@
             selectedCard.classList.add('selected');
             
             const selectedPersona = selectedCard.dataset.value;
+            const skeletonCheckbox = document.getElementById('slAddSkeleton');
+
+            // Handle source protocol visibility
             if (selectedPersona === 'simulation') {
                 sourceProtocolSection.classList.remove('disabled-section');
                 sourceProtocolSection.querySelector('select').disabled = false;
@@ -300,10 +304,21 @@
                 sourceProtocolSection.querySelector('select').disabled = true;
                 sourceProtocolSection.querySelector('p').style.display = 'block';
             }
+
+            // Handle skeleton checkbox state based on persona
+            if (selectedPersona === 'interpreter') {
+                skeletonCheckbox.checked = true;
+                skeletonCheckbox.disabled = true;
+            } else {
+                skeletonCheckbox.disabled = false;
+            }
         });
         
+        // Initialize sections state
         sourceProtocolSection.classList.add('disabled-section');
         sourceProtocolSection.querySelector('select').disabled = true;
+        document.getElementById('slAddSkeleton').checked = true; // Default state for interpreter
+        document.getElementById('slAddSkeleton').disabled = true;
         
         const academicSourceProtocolText = `
 ### 4. פרוטוקול סינון מקורות ###
@@ -406,7 +421,8 @@ ${task}`;
 ${task}`;
                 }
                 
-                if (addSkeleton && selectedPersona === 'simulation') {
+                // Add skeleton if chosen (will be forced on for interpreter)
+                if (addSkeleton) {
                     finalPrompt += '\n\n## שלד רעיוני מקדים\nהצג תחילה מפת דרכים מושגית של הניתוח לפני הפירוט המלא.';
                 }
                 
