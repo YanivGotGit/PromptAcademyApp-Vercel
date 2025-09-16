@@ -1,4 +1,4 @@
-const { GoogleGenerativeAI } = require("@google/generative-ai");
+const { GoogleGenerativeAI } = require("@google/generativetools");
 
 module.exports = async (req, res) => {
   if (req.method !== 'POST') {
@@ -20,9 +20,16 @@ module.exports = async (req, res) => {
     const genAI = new GoogleGenerativeAI(API_KEY);
     
     if (type === 'identify_persona') {
-      // --- Stage 1: Identify Persona in English ---
+      // --- Stage 1: Identify Persona with new, improved prompt ---
       const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest" });
-      const personaIdentificationPrompt = `Analyze the user request and identify the most suitable persona or style. Return ONLY the name of the persona/style in English (e.g., "Greek epic poet", "a pirate"). User request: "${prompt}"`;
+      
+      const personaIdentificationPrompt = `Your task is to identify a specific persona from the user's request. Follow these rules strictly:
+1.  If the request explicitly mentions or strongly implies a specific, iconic author, artist, or historical figure (e.g., "War and Peace" implies Leo Tolstoy; "Hamlet" implies Shakespeare), you MUST return that person's full name.
+2.  If no specific iconic figure is identified, then and only then, identify the most suitable general style or role (e.g., "a pirate," "a 19th-century Russian novelist").
+3.  Return ONLY the resulting name or style in English.
+
+User request: "${prompt}"`;
+      
       const personaResult = await model.generateContent(personaIdentificationPrompt);
       const englishPersona = personaResult.response.text().trim();
 
@@ -35,7 +42,7 @@ module.exports = async (req, res) => {
         }
       });
       
-      const translationPrompt = `Return a JSON object with a single key "translation" containing the Hebrew translation of this phrase: "${englishPersona}"`;
+      const translationPrompt = `Return a JSON object with a single key "translation" containing the precise Hebrew translation of this name/phrase: "${englishPersona}"`;
 
       const translationResult = await modelForJson.generateContent(translationPrompt);
       const jsonResponseText = translationResult.response.text();
@@ -53,7 +60,6 @@ module.exports = async (req, res) => {
 
   } catch (error) {
     console.error("Error in Vercel function:", error);
-    // Ensure the error response is also in JSON format for consistency
     const errorMessage = error.message || "An unknown error occurred.";
     return res.status(500).json({ error: errorMessage });
   }
