@@ -18,28 +18,34 @@ module.exports = async (req, res) => {
     }
 
     const genAI = new GoogleGenerativeAI(API_KEY);
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest" });
     
     if (type === 'identify_persona') {
-      // Step 1: Create a prompt to identify the persona in English
+      // --- Stage 1: Identify Persona in English ---
+      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest" });
       const personaIdentificationPrompt = `Analyze the user request and identify the most suitable persona or style. Return ONLY the name of the persona/style in English (e.g., "Greek epic poet", "a pirate"). User request: "${prompt}"`;
-      
-      // Step 2: Call the model to get the English persona
       const personaResult = await model.generateContent(personaIdentificationPrompt);
       const englishPersona = personaResult.response.text().trim();
 
-      // Step 3: Create a new prompt to translate the identified persona to Hebrew
-      const translationPrompt = `Translate the following phrase to Hebrew: "${englishPersona}"`;
-
-      // Step 4: Call the model again to get the Hebrew translation
-      const translationResult = await model.generateContent(translationPrompt);
-      const hebrewPersona = translationResult.response.text().trim();
+      // --- Stage 2: Translate to Hebrew using JSON mode for clean output ---
+      const modelForJson = genAI.getGenerativeModel({ 
+        model: "gemini-1.5-flash-latest",
+        generationConfig: {
+          responseMimeType: "application/json",
+          temperature: 0.1
+        }
+      });
       
-      // Step 5: Return the final Hebrew persona to the client
-      return res.status(200).json({ text: hebrewPersona });
+      const translationPrompt = `Return a JSON object with a single key "translation" containing the Hebrew translation of this phrase: "${englishPersona}"`;
+
+      const translationResult = await modelForJson.generateContent(translationPrompt);
+      const jsonResponseText = translationResult.response.text();
+      const hebrewPersona = JSON.parse(jsonResponseText).translation;
+      
+      return res.status(200).json({ text: hebrewPersona.trim() });
 
     } else {
       // Default behavior for other requests (e.g., Quick Builder)
+      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest" });
       const result = await model.generateContent(prompt);
       const text = result.response.text();
       return res.status(200).json({ text });
@@ -47,6 +53,8 @@ module.exports = async (req, res) => {
 
   } catch (error) {
     console.error("Error in Vercel function:", error);
-    return res.status(500).json({ error: error.message });
+    // Ensure the error response is also in JSON format for consistency
+    const errorMessage = error.message || "An unknown error occurred.";
+    return res.status(500).json({ error: errorMessage });
   }
 };
