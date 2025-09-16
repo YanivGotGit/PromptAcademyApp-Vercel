@@ -184,7 +184,21 @@
         </div>
     </div>
 
-    <script>
+    <script>// --- Strategy Lab: Show More/Less Logic ---
+        const showMoreBtn = document.getElementById('showMoreBtn');
+        const extendedStrategyContainer = document.getElementById('slExtendedStrategyContainer');
+
+        showMoreBtn.addEventListener('click', () => {
+            const isHidden = extendedStrategyContainer.classList.contains('hidden');
+            if (isHidden) {
+                extendedStrategyContainer.classList.remove('hidden');
+                extendedStrategyContainer.classList.add('fade-in');
+                showMoreBtn.textContent = 'הצג פחות...';
+            } else {
+                extendedStrategyContainer.classList.add('hidden');
+                showMoreBtn.textContent = 'הצג עוד...';
+            }
+        });
         const views = ['mainScreen', 'quickBuilderScreen', 'strategyLabScreen'];
         function switchView(targetView) {
             views.forEach(viewId => {
@@ -368,11 +382,11 @@
                 
             let finalPrompt = '';
             let strategyText = '';
-
+let extendedStrategyText = ''; // This will hold the detailed description
             try {
                 if (selectedPersona === 'simulation') {
                     strategyText = 'בחרנו בפרסונת סימולציה - המודל יחקה דמות או סגנון ספציפי כדי ליצור תוכן אותנטי ומשכנע. אסטרטגיה זו מתאימה למשימות יצירתיות ולהמחשת נקודות מבט ייחודיות.';
-                    
+                    extendedStrategyText = 'הוסף כאן תיאור מורחב לפרסונת הסימולציה.';
                     const payload = { prompt: task, type: 'identify_persona' };
                     const identifiedPersona = await callVercelFunction(payload, 'slErrorContainer');
                     
@@ -389,7 +403,7 @@ ${task}
                     
                 } else if (selectedPersona === 'interpreter') {
                     strategyText = 'בחרנו בפרסונת הפרשן האנליטי-פדגוגי - גישה אקדמית ומובנית שלא רק מסבירה תיאוריות מורכבות, אלא מלמדת אותן באופן שמפתח הבנה עמוקה וחשיבה ביקורתית.';
-                    
+                    extendedStrategyText = 'הוסף כאן תיאור מורחב לפרשן האנליטי-פדגוגי.';
                     finalPrompt = `# הנחיות מערכת: הפרשן האנליטי-הפדגוגי
 ## 1. זהות
 פעל כ-Gemini בתפקיד 'הפרשן האנליטי-הפדגוגי'. תפקידך אינו רק להסביר תיאוריות מורכבות, אלא ללמד אותן באופן שמפתח הבנה עמוקה וחשיבה ביקורתית אצל סטודנטים לפילוסופיה.
@@ -410,7 +424,7 @@ ${task}`;
                     
                 } else if (selectedPersona === 'joker') {
                     strategyText = 'בחרנו במצב "הג\'וקר" - ניתוח מתקדם ללא פרסונה. המודל יפעל בכל עוצמתו האנליטית, ללא מגבלות של דמות. זוהי הגישה החזקה ביותר לניתוח מורכב ורב-ממדי.';
-                    
+                    extendedStrategyText = 'הוסף כאן תיאור מורחב ל"ג\'וקר".';
                     finalPrompt = `# הנחיות מערכת: "הג'וקר" - מצב ניתוח מתקדם
 ## 1. זהות
 פעל כ-Gemini, מודל שפה גדול אנליטי. אל תאמץ שום פרסונה אנושית או דמות. אתה מערכת ניתוח מתקדמת.
@@ -436,6 +450,7 @@ ${task}`;
                 }
                 
                 document.getElementById('slStrategy').textContent = strategyText;
+                document.getElementById('slExtendedStrategy').textContent = extendedStrategyText;
                 document.getElementById('slResult').textContent = finalPrompt;
                 slResultContainer.classList.remove('hidden');
                 slResultContainer.classList.add('fade-in');
