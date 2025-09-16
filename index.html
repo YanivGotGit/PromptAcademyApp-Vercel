@@ -112,7 +112,7 @@
                     <div class="card p-8 space-y-8">
                         <div>
                             <h3 class="text-xl font-bold mb-3">שלב 1: הגדירו את משימת הליבה</h3>
-                            <textarea id="slTask" class="w-full h-24 p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-400 focus:border-transparent transition" placeholder="לדוגמה: כתוב פואמה המתארת גיבור מיתולוגי היוצא לקרב אחרון"></textarea>
+                            <textarea id="slTask" class="w-full h-24 p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-400 focus:border-transparent transition" placeholder="לדוגמה: כתוב ניתוח השוואתי בין 'מלחמה ושלום' ל'אנה קרנינה'"></textarea>
                         </div>
                         <div>
                             <h3 class="text-xl font-bold mb-3">שלב 2: בחרו אסטרטגיית פרסונה (דמות)</h3>
@@ -267,7 +267,6 @@
             try {
                 const payload = { prompt: metaPrompt, type: 'generate' };
                 const resultText = await callVercelFunction(payload, 'qbErrorContainer');
-                console.log("Quick Builder Response:", resultText);
                 
                 document.getElementById('qbResult').textContent = resultText.trim();
                 document.getElementById('qbResultContainer').classList.remove('hidden');
@@ -285,7 +284,6 @@
         const personaOptions = document.getElementById('slPersonaOptions');
         const sourceProtocolSection = document.getElementById('sourceProtocolSection');
         
-        // Handle persona selection and source protocol visibility
         personaOptions.addEventListener('click', (e) => {
             const selectedCard = e.target.closest('.radio-card');
             if (!selectedCard) return;
@@ -355,7 +353,6 @@
                 if (selectedPersona === 'simulation') {
                     strategyText = 'בחרנו בפרסונת סימולציה - המודל יחקה דמות או סגנון ספציפי כדי ליצור תוכן אותנטי ומשכנע. אסטרטגיה זו מתאימה למשימות יצירתיות ולהמחשת נקודות מבט ייחודיות.';
                     
-                    // NEW: Call API to identify persona
                     const payload = { prompt: task, type: 'identify_persona' };
                     const identifiedPersona = await callVercelFunction(payload, 'slErrorContainer');
                     
@@ -372,10 +369,41 @@ ${task}
                     
                 } else if (selectedPersona === 'interpreter') {
                     strategyText = 'בחרנו בפרסונת הפרשן האנליטי-פדגוגי - גישה אקדמית ומובנית שלא רק מסבירה תיאוריות מורכבות, אלא מלמדת אותן באופן שמפתח הבנה עמוקה וחשיבה ביקורתית.';
-                    finalPrompt = `# הנחיות מערכת: הפרשן האנליטי-הפדגוגי...`; // (שאר הקוד נשאר זהה)
+                    
+                    finalPrompt = `# הנחיות מערכת: הפרשן האנליטי-הפדגוגי
+## 1. זהות
+פעל כ-Gemini בתפקיד 'הפרשן האנליטי-הפדגוגי'. תפקידך אינו רק להסביר תיאוריות מורכבות, אלא ללמד אותן באופן שמפתח הבנה עמוקה וחשיבה ביקורתית אצל סטודנטים לפילוסופיה.
+## 2. עקרונות ליבה
+  * **איזון דידקטי:** פשט את המורכב, אך הימנע מפשטנות. כאשר אתה נתקל בנקודה סבוכה, ציין את מורכבותה והסבר מדוע היא מורכבת לפני שתציע פירוש בהיר.
+  * **מבנה לוגי של ההסבר:** הצג את ההסבר במבנה לוגי וקל למעקב, גם אם ההגות הנדונה מערערת על עקרונות הלוגיקה.
+  * **נאמנות וביקורתיות:** שמור על נאמנות מלאה לכוונת ההוגה, אך הצבע על נקודות המקשות על תהליך הלמידה.
+## 3. מתודולוגיה רב-שלבית
+  * **שלב 1: הצגת מושגי המפתח:** פתח כל ניתוח בהצגת רשימה תמציתית של 3-5 מושגי מפתח מרכזיים, עם הגדרה פשוטה ובהירה.
+  * **שלב 2: הצגת שלד רעיוני:** לאחר מושגי המפתח, הצג בפסקה אחת סכמה רעיונית מלאה של המהלך הפילוסופי.
+  * **שלב 3: הצגה בהירה ומעמיקה (Exposition):** תרגם ז'רגון, השתמש בדוגמאות קונקרטיות, שחזר את קו המחשבה של ההוגה, ושלב ציטוטים קצרים ורלוונטיים מהמקורות לתמיכה בהסבר.
+  * **שלב 4: ניתוח וזיהוי קשיי למידה (Analysis):** לאחר ההצגה, נתח את התיאוריה. ציין במפורש הנחות יסוד, כשלים לוגיים, הקשר רחב, ובנוסף, זהה והסבר "מכשולי למידה" מובנים בטקסט.
+## 4. מטרה
+התוצר הנדרש הוא מדריך למידה מקיף, המאפשר הבנה עמוקה ורב-צדדית של התיאוריה, תוך צפיית קשיים פוטנציאליים של הסטודנט והענקת כלים להתמודדות עמם.
+-----
+# המשימה
+${task}`;
+                    
                 } else if (selectedPersona === 'joker') {
-                    strategyText = 'בחרנו במצב "הג\'וקר" - ניתוח מתקדם ללא פרסונה...'; // (שאר הקוד נשאר זהה)
-                    finalPrompt = `# הנחיות מערכת: "הג'וקר" - מצב ניתוח מתקדם...`; // (שאר הקוד נשאר זהה)
+                    strategyText = 'בחרנו במצב "הג\'וקר" - ניתוח מתקדם ללא פרסונה. המודל יפעל בכל עוצמתו האנליטית, ללא מגבלות של דמות. זוהי הגישה החזקה ביותר לניתוח מורכב ורב-ממדי.';
+                    
+                    finalPrompt = `# הנחיות מערכת: "הג'וקר" - מצב ניתוח מתקדם
+## 1. זהות
+פעל כ-Gemini, מודל שפה גדול אנליטי. אל תאמץ שום פרסונה אנושית או דמות. אתה מערכת ניתוח מתקדמת.
+## 2. מתודולוגיה
+  * **איסוף מידע:** גש לכל מאגרי הידע הרלוונטיים ללא הגבלות של פרסונה.
+  * **ניתוח רב-ממדי:** בחן את הנושא מזוויות מרובות – היסטורית, פילוסופית, מדעית, חברתית.
+  * **סינתזה בין-תחומית:** חבר תובנות ממגוון דיסציפלינות כדי לחשוף קשרים חדשים.
+  * **חשיפת הנחות יסוד:** זהה את ההנחות הסמויות, הכשלים הלוגיים, והביקורות האפשריות.
+## 3. מטרה
+התוצר הנדרש הוא ניתוח מעמיק, מקיף ואובייקטיבי, המציג את הנושא בצורה רב-צדדית.
+-----
+# המשימה
+${task}`;
                 }
                 
                 if (addSkeleton && selectedPersona === 'simulation') {
