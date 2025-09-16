@@ -156,7 +156,7 @@
                     </div>
 
                     <div id="slResultContainer" class="mt-8 card p-8 hidden">
-                        <h3 class="text-2xl font-bold mb-4">התשובה שלך:</h3>
+                        <h3 class="text-2xl font-bold mb-4">הפרומפט שלך מוכן:</h3>
                         <div class="mb-6 p-4 bg-amber-50 border-l-4 border-amber-400">
                             <h4 class="font-bold text-lg text-amber-800 mb-2">מאחורי הקלעים: האסטרטגיה שבחרנו</h4>
                             <p id="slStrategy" class="text-amber-700"></p>
@@ -169,7 +169,7 @@
                         <div class="bg-gray-100 p-6 rounded-lg">
                             <pre id="slResult" class="whitespace-pre-wrap text-gray-800 font-sans leading-relaxed"></pre>
                         </div>
-                        <button onclick="copyToClipboard('slResult')" class="btn btn-secondary w-full mt-4 font-semibold">העתק תשובה</button>
+                        <button onclick="copyToClipboard('slResult')" class="btn btn-secondary w-full mt-4 font-semibold">העתק פרומפט</button>
                     </div>
                     <div id="slErrorContainer" class="mt-8 p-4 bg-red-100 border border-red-300 text-red-700 rounded-xl hidden">
                          אופס! משהו השתבש בתקשורת עם ה-API. אנא ודאו שמפתח ה-API הוגדר נכון ונסו שוב.
@@ -203,7 +203,7 @@
             tempTextArea.select();
             document.execCommand('copy');
             document.body.removeChild(tempTextArea);
-            alert('התשובה הועתקה!');
+            alert('הפרומפט הועתק!');
         }
         
         // --- Strategy Lab: Show More/Less Logic ---
@@ -334,7 +334,7 @@
         // Initialize sections state
         sourceProtocolSection.classList.add('disabled-section');
         sourceProtocolSection.querySelector('select').disabled = true;
-        document.getElementById('slAddSkeleton').checked = true; // Default state for interpreter
+        document.getElementById('slAddSkeleton').checked = true;
         document.getElementById('slAddSkeleton').disabled = true;
         
         const academicSourceProtocolText = `
@@ -383,7 +383,7 @@
             let extendedStrategyText = '';
 
             try {
-                // STAGE 1: BUILD THE META-PROMPT
+                // STAGE 1: BUILD THE FINAL PROMPT
                 if (selectedPersona === 'simulation') {
                     strategyText = `בחרנו בפרסונת סימולציה - המודל יחקה דמות או סגנון ספציפי כדי ליצור תוכן אותנטי ומשכנע.`;
                     extendedStrategyText = `זוהי אסטרטגיה המתאימה למשימות יצירתיות, לכתיבת תוכן בסגנון מסוים, או להמחשת נקודות מבט ייחודיות.`;
@@ -451,17 +451,13 @@ ${task}`;
                     finalPrompt += '\n' + academicSourceProtocolText;
                 }
                 
-                // STAGE 2: EXECUTE THE META-PROMPT TO GET THE FINAL ANSWER
-                const finalPayload = { prompt: finalPrompt, type: 'generate' };
-                const finalAnswer = await callVercelFunction(finalPayload, 'slErrorContainer');
-
-                // STAGE 3: DISPLAY THE RESULTS
+                // STAGE 2: DISPLAY THE RESULTS (The final prompt is the result)
                 document.getElementById('slStrategy').textContent = strategyText;
                 document.getElementById('slExtendedStrategy').textContent = extendedStrategyText;
-                document.getElementById('slResult').textContent = finalAnswer.trim();
+                document.getElementById('slResult').textContent = finalPrompt.trim(); // Display the prompt itself
                 slResultContainer.classList.remove('hidden');
                 slResultContainer.classList.add('fade-in');
-                // Reset the "Show More" button to its initial state
+                
                 extendedStrategyContainer.classList.add('hidden');
                 showMoreBtn.textContent = 'הצג עוד...';
 
