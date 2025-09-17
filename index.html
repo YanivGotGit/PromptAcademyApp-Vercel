@@ -113,7 +113,7 @@
                     <div class="card p-8 space-y-8">
                         <div>
                             <h3 class="text-xl font-bold mb-3">שלב 1: הגדירו את משימת הליבה</h3>
-                            <textarea id="slTask" class="w-full h-24 p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-400 focus:border-transparent transition" placeholder="לדוגמה: מהו מוסר? ענה לילד בן 10 בתור מורו ורבו של אפלטון."></textarea>
+                            <textarea id="slTask" class="w-full h-24 p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-400 focus:border-transparent transition" placeholder="לדוגמה: מהו מוסר?"></textarea>
                         </div>
                         <div>
                             <h3 class="text-xl font-bold mb-3">שלב 2: בחרו אסטרטגיית פרסונה (דמות)</h3>
@@ -133,7 +133,11 @@
                             </div>
                         </div>
                          <div>
-                            <h3 class="text-xl font-bold mb-3">שלב 3: קובעים את כללי המשחק</h3>
+                            <h3 class="text-xl font-bold mb-3">שלב 3: למי התוכן מיועד? (אופציונלי)</h3>
+                            <input type="text" id="slAudience" class="w-full p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-400 focus:border-transparent transition" placeholder="לדוגמה: ילד בן 10, סטודנטים לפיזיקה, מנהלים בכירים">
+                        </div>
+                         <div>
+                            <h3 class="text-xl font-bold mb-3">שלב 4: קובעים את כללי המשחק</h3>
                             <div class="space-y-4">
                                 <div class="flex items-center justify-between bg-gray-50 p-3 rounded-lg">
                                     <label for="slAddSkeleton" class="font-semibold text-gray-700">הוסף שלד רעיוני מקדים?</label>
@@ -363,8 +367,8 @@
         const slResultContainer = document.getElementById('slResultContainer');
         
         slBuildBtn.addEventListener('click', async () => {
-            const task = document.getElementById('slTask').value.trim();
-            if (!task) {
+            const originalTask = document.getElementById('slTask').value.trim();
+            if (!originalTask) {
                 alert('יש להגדיר את משימת הליבה.');
                 return;
             }
@@ -377,6 +381,13 @@
             const selectedPersona = personaOptions.querySelector('.selected').dataset.value;
             const addSkeleton = document.getElementById('slAddSkeleton').checked;
             const sourceProtocol = document.getElementById('slSourceProtocol').value;
+            const audience = document.getElementById('slAudience').value.trim();
+            
+            // Combine task and audience if audience is provided
+            let task = originalTask;
+            if (audience) {
+                task = `בהתייחס לקהל יעד (${audience}), ${originalTask}`;
+            }
                 
             let finalPrompt = '';
             let strategyText = '';
@@ -388,6 +399,7 @@
                     strategyText = `בחרנו בפרסונת סימולציה - המודל יחקה דמות או סגנון ספציפי כדי ליצור תוכן אותנטי ומשכנע.`;
                     extendedStrategyText = `זוהי אסטרטגיה המתאימה למשימות יצירתיות, לכתיבת תוכן בסגנון מסוים, או להמחשת נקודות מבט ייחודיות.`;
                     
+                    // For simulation, the persona identification should also get the combined task
                     const payload = { prompt: task, type: 'identify_persona' };
                     const identifiedPersona = await callVercelFunction(payload, 'slErrorContainer');
                     
@@ -454,7 +466,7 @@ ${task}`;
                 // STAGE 2: DISPLAY THE RESULTS (The final prompt is the result)
                 document.getElementById('slStrategy').textContent = strategyText;
                 document.getElementById('slExtendedStrategy').textContent = extendedStrategyText;
-                document.getElementById('slResult').textContent = finalPrompt.trim(); // Display the prompt itself
+                document.getElementById('slResult').textContent = finalPrompt.trim();
                 slResultContainer.classList.remove('hidden');
                 slResultContainer.classList.add('fade-in');
                 
