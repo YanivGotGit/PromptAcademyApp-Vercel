@@ -305,27 +305,24 @@
             const selectedPersona = selectedCard.dataset.value;
             const skeletonCheckbox = document.getElementById('slAddSkeleton');
 
+            const sourceSelect = sourceProtocolSection.querySelector('select');
             if (selectedPersona === 'simulation') {
                 sourceProtocolSection.classList.remove('disabled-section');
-                sourceProtocolSection.querySelector('select').disabled = false;
+                sourceSelect.disabled = false;
                 sourceProtocolSection.querySelector('p').style.display = 'none';
             } else {
+                // For 'interpreter' and 'joker', lock on 'academic'
                 sourceProtocolSection.classList.add('disabled-section');
-                sourceProtocolSection.querySelector('select').disabled = true;
+                sourceSelect.disabled = true;
+                sourceSelect.value = 'academic'; // Lock the value to academic
                 sourceProtocolSection.querySelector('p').style.display = 'block';
-            }
-
-            if (selectedPersona === 'interpreter') {
-                skeletonCheckbox.checked = true;
-                skeletonCheckbox.disabled = true;
-            } else {
-                skeletonCheckbox.disabled = false;
             }
         });
         
         // Initialize sections state
         sourceProtocolSection.classList.add('disabled-section');
         sourceProtocolSection.querySelector('select').disabled = true;
+        sourceProtocolSection.querySelector('select').value = 'academic';
         document.getElementById('slAddSkeleton').checked = true;
         document.getElementById('slAddSkeleton').disabled = true;
         
