@@ -304,8 +304,9 @@
             
             const selectedPersona = selectedCard.dataset.value;
             const skeletonCheckbox = document.getElementById('slAddSkeleton');
-
             const sourceSelect = sourceProtocolSection.querySelector('select');
+
+            // --- Logic for Source Protocol ---
             if (selectedPersona === 'simulation') {
                 sourceProtocolSection.classList.remove('disabled-section');
                 sourceSelect.disabled = false;
@@ -314,8 +315,17 @@
                 // For 'interpreter' and 'joker', lock on 'academic'
                 sourceProtocolSection.classList.add('disabled-section');
                 sourceSelect.disabled = true;
-                sourceSelect.value = 'academic'; // Lock the value to academic
+                sourceSelect.value = 'academic'; 
                 sourceProtocolSection.querySelector('p').style.display = 'block';
+            }
+
+            // --- Logic for Skeleton Checkbox ---
+            if (selectedPersona === 'interpreter') {
+                skeletonCheckbox.checked = true;
+                skeletonCheckbox.disabled = true;
+            } else {
+                // For 'simulation' and 'joker', the option should be available
+                skeletonCheckbox.disabled = false;
             }
         });
         
@@ -324,7 +334,7 @@
         sourceProtocolSection.querySelector('select').disabled = true;
         sourceProtocolSection.querySelector('select').value = 'academic';
         document.getElementById('slAddSkeleton').checked = true;
-        document.getElementById('slAddSkeleton').disabled = false;
+        document.getElementById('slAddSkeleton').disabled = true;
         
         const academicSourceProtocolText = `
 ### 4. פרוטוקול סינון מקורות ###
