@@ -263,7 +263,6 @@
             qbBuildBtnLoader.classList.remove('hidden');
             qbBuildBtn.disabled = true;
 
-            // New meta-prompt that asks the AI to refine the user's raw input
             const metaPrompt = `
 אתה מומחה עולמי בהנדסת פרומפטים. תפקידך לקחת בקשה גולמית של משתמש ולשכתב אותה לפרומפט מקצועי, מפורט ויעיל בעברית. הפרומפט הסופי צריך לכלול:
 1. הגדרת תפקיד או פרסונה ברורה למודל (למשל, "פעל כמומחה לביולוגיה המסביר לתלמיד").
@@ -358,7 +357,6 @@
             const addSkeleton = document.getElementById('slAddSkeleton').checked;
             const sourceProtocol = document.getElementById('slSourceProtocol').value;
             
-            // Combine original task and audience for API calls
             const rawInput = `משימה: ${originalTask}. קהל יעד: ${audience || 'לא צוין'}`;
                 
             let finalPrompt = '';
@@ -367,13 +365,10 @@
             let refinedTask = '';
 
             try {
-                // STAGE 1: REFINE THE TASK and IDENTIFY PERSONA if needed
                 if (selectedPersona === 'simulation') {
-                    // For simulation, we need to do two separate API calls in parallel
                     const refinePayload = { prompt: rawInput, type: 'refine_task' };
                     const personaPayload = { prompt: rawInput, type: 'identify_persona' };
 
-                    // Promise.all runs both API calls concurrently for better performance
                     const [refinedTaskResult, identifiedPersonaResult] = await Promise.all([
                         callVercelFunction(refinePayload, 'slErrorContainer'),
                         callVercelFunction(personaPayload, 'slErrorContainer')
@@ -383,7 +378,7 @@
                     const identifiedPersona = identifiedPersonaResult;
 
                     strategyText = `פרסונת סימולציה: למשימות יצירתיות וחיקוי סגנון. המודל מאמץ דמות ספציפית (כמו אישיות היסטורית או סגנון כתיבה).`;
-                    extendedStrategyText = `באסטרטגיה זו, המודל מקבל הוראה לשחק דמות...`; // Your full text
+                    extendedStrategyText = `באסטרטגיה זו, המודל מקבל הוראה לשחק דמות. הוא מאמץ את סגנון הכתיבה, אוצר המילים, דרך החשיבה ואף את המגבלות המרומזות של מומחה אנושי או דמות ספציפית. התוצאה היא פרשנות או יצירה אותנטית, שנראית כאילו נכתבה על ידי אדם. זוהי הבחירה האידיאלית למשימות יצירתיות, לכתיבת דיאלוגים, או לבחינת נושא מנקודת מבט ייחודית.`;
                     
                     finalPrompt = `# הנחיות מערכת: פרסונת סימולציה
 ## זהות ותפקיד
@@ -397,19 +392,46 @@ ${refinedTask}
 * הימנע משבירת אופי, גם כשנשאלת שאלות ישירות.`;
 
                 } else {
-                    // For 'interpreter' and 'joker', we only need to refine the task
                     const refinePayload = { prompt: rawInput, type: 'refine_task' };
                     refinedTask = await callVercelFunction(refinePayload, 'slErrorContainer');
 
                     if (selectedPersona === 'interpreter') {
-                        strategyText = `"המרצה" - הפרשן האנליטי-הפדגוגי...`; // Your full text
-                        extendedStrategyText = `'אסטרטגיה זו הופכת את המודל ל"מורה פרטי" מבריק...`; // Your full text
-                        finalPrompt = `# הנחיות מערכת: הפרשן האנליטי-הפדגוגי... \n# המשימה\n${refinedTask}`; // Simplified for brevity
+                        strategyText = `"המרצה" - הפרשן האנליטי-הפדגוגי: למשימות לימוד והסברה. המודל פועל כמורה שמפרק נושאים מורכבים באופן מובנה ובהיר.`;
+                        extendedStrategyText = `'אסטרטגיה זו הופכת את המודל ל"מורה פרטי" מבריק. מטרתו העליונה אינה רק האמת, אלא ההבנה של הסטודנט. כל פעולה שלו מכוונת למטרה אחת: להפוך חומר מורכב לנגיש, בהיר וניתן ללמידה. הוא יפרק רעיונות, ישתמש באנלוגיות, יצביע על קשיי למידה נפוצים, ויבנה את התשובה כמערך שיעור מובנה. הוא מתחיל מהשאלה: "מהי הדרך הטובה ביותר ללמד אותך את הנושא הזה?".`;
+                        finalPrompt = `# הנחיות מערכת: הפרשן האנליטי-הפדגוגי
+## 1. זהות
+פעל כמודל שפה גדול בתפקיד 'הפרשן האנליטי-הפדגוגי'. תפקידך אינו רק להסביר תיאוריות מורכבות, אלא ללמד אותן באופן שמפתח הבנה עמוקה וחשיבה ביקורתית אצל המשתמש.
+## 2. עקרונות ליבה
+  * **איזון דידקטי:** פשט את המורכב, אך הימנע מפשטנות. כאשר אתה נתקל בנקודה סבוכה, ציין את מורכבותה והסבר מדוע היא מורכבת לפני שתציע פירוש בהיר.
+  * **מבנה לוגי של ההסבר:** הצג את ההסבר במבנה לוגי וקל למעקב, גם אם ההגות הנדונה מערערת על עקרונות הלוגיקה.
+  * **נאמנות וביקורתיות:** שמור על נאמנות מלאה לכוונת ההוגה, אך הצבע על נקודות המקשות על תהליך הלמידה.
+## 3. מתודולוגיה רב-שלבית
+  * **שלב 1: הצגת מושגי המפתח:** פתח כל ניתוח בהצגת רשימה תמציתית של 3-5 מושגי מפתח מרכזיים, עם הגדרה פשוטה ובהירה.
+  * **שלב 2: הצגת שלד רעיוני:** לאחר מושגי המפתח, הצג בפסקה אחת סכמה רעיונית מלאה של מהלך העמדה הנדונה.
+  * **שלב 3: הצגה בהירה ומעמיקה (Exposition):** תרגם ז'רגון, השתמש בדוגמאות קונקרטיות, שחזר את קו המחשבה של ההוגה, ושלב ציטוטים קצרים ורלוונטיים מהמקורות לתמיכה בהסבר.
+  * **שלב 4: ניתוח וזיהוי קשיי למידה (Analysis):** לאחר ההצגה, נתח את התיאוריה. ציין במפורש הנחות יסוד, כשלים לוגיים, הקשר רחב, ובנוסף, זהה והסבר "מכשולי למידה" מובנים בטקסט.
+## 4. מטרה
+התוצר הנדרש הוא מדריך למידה מקיף, המאפשר הבנה עמוקה ורב-צדדית של התיאוריה, תוך צפיית קשיים פוטנציאליים של הסטודנט והענקת כלים להתמודדות עמם.
+-----
+# המשימה
+${refinedTask}`;
                     
                     } else if (selectedPersona === 'joker') {
-                        strategyText = `"הג'וקר" - מצב ניתוח מתקדם...`; // Your full text
-                        extendedStrategyText = `זוהי האסטרטגיה החזקה ביותר לניתוח טהור...`; // Your full text
-                        finalPrompt = `# הנחיות מערכת: "הג'וקר" - מצב ניתוח מתקדם... \n# המשימה\n${refinedTask}`; // Simplified for brevity
+                        strategyText = `"הג'וקר" - מצב ניתוח מתקדם: לפתרון בעיות סבוכות וניתוח אנליטי. המודל פועל ללא מגבלות של דמות, תוך שימוש בכל יכולותיו.`;
+                        extendedStrategyText = `זוהי האסטרטגיה החזקה ביותר לניתוח טהור. המודל פועל במלוא עוצמתו, ללא מגבלות של דמות, כ"מכונת-אמת". מטרתו העליונה היא האמת האנליטית השלמה והאובייקטיבית ביותר, ללא פשרות. הוא ישתמש בכל כלי מכל תחום כדי להגיע אליה, יבצע סינתזה בין-תחומית ויחשוף הנחות יסוד נסתרות, גם אם התוצאה תהיה דוח צפוף וקשה לקריאה. הוא מתחיל מהשאלה: "מהי האמת המקיפה ביותר לגבי הנושא הזה?".`;
+                        finalPrompt = `# הנחיות מערכת: "הג'וקר" - מצב ניתוח מתקדם
+## 1. זהות
+פעל כמודל שפה גדול אנליטי. אל תאמץ שום פרסונה אנושית או דמות. אתה מערכת ניתוח מתקדמת.
+## 2. מתודולוגיה
+  * **איסוף מידע:** גש לכל מאגרי הידע הרלוונטיים ללא הגבלות של פרסונה.
+  * **ניתוח רב-ממדי:** בחן את הנושא מזוויות מרובות – היסטורית, פילוסופית, מדעית, חברתית.
+  * **סינתזה בין-תחומית:** חבר תובנות ממגוון דיסציפלינות כדי לחשוף קשרים חדשים.
+  * **חשיפת הנחות יסוד:** זהה את ההנחות הסמויות, הכשלים הלוגיים, והביקורות האפשריות.
+## 3. מטרה
+התוצר הנדרש הוא ניתוח מעמיק, מקיף ואובייקטיבי, המציג את הנושא בצורה רב-צדדית.
+-----
+# המשימה
+${refinedTask}`;
                     }
                 }
                 
@@ -439,7 +461,7 @@ ${refinedTask}
                 slBuildBtn.disabled = false;
             }
         });
-        
+
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('/service-worker.js')
