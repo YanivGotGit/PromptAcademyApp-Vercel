@@ -14,11 +14,19 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        .gemini-gradient-text {
-            background: -webkit-linear-gradient(45deg, #4285F4, #DB4437, #F4B400, #0F9D58);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+        .gemini-animated-gradient {
+    background: linear-gradient(90deg, #4285F4, #DB4437, #F4B400, #0F9D58, #4285F4);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: gradient-animation 4s linear infinite;
+}
+
+@keyframes gradient-animation {
+    to {
+        background-position: 200% center;
+    }
+}
         body { font-family: 'Assistant', sans-serif; scroll-behavior: smooth; background-color: #f8fafc; }
         .gradient-text { background: -webkit-linear-gradient(45deg, #6d28d9, #4f46e5); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .card { background: white; border-radius: 1.5rem; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05); transition: transform 0.3s ease, box-shadow 0.3s ease; }
@@ -64,6 +72,10 @@
                         <button onclick="switchView('strategyLabScreen')" class="btn btn-primary font-bold py-3 px-6 rounded-xl text-lg w-full">למשימות מורכבות</button>
                     </div>
                 </div>
+                <div class="text-center mt-16 pt-8 border-t border-gray-200">
+    <p class="font-bold gemini-animated-gradient">Powered by Gemini AI</p>
+    <p class="text-sm text-gray-500 mt-1">מו"פ הנדסת פרומפטים בשיתוף Gemini AI</p>
+</div>
             </div>
         </main>
 
@@ -97,7 +109,7 @@
                         אופס! משהו השתבש. אנא ודאו שמפתח ה-API הוגדר נכון ונסו שוב.
                     </div>
                     <div class="text-center mt-16 pt-8 border-t border-gray-200">
-    <p class="font-bold gemini-gradient-text">Powered by Gemini AI</p>
+    <p class="font-bold gemini-animated-gradient">Powered by Gemini AI</p>
     <p class="text-sm text-gray-500 mt-1">מו"פ הנדסת פרומפטים בשיתוף Gemini AI</p>
 </div>
                 </div>
@@ -181,7 +193,7 @@
                          אופס! משהו השתבש בתקשורת עם ה-API. אנא ודאו שמפתח ה-API הוגדר נכון ונסו שוב.
                     </div>
 <div class="text-center mt-16 pt-8 border-t border-gray-200">
-    <p class="font-bold gemini-gradient-text">Powered by Gemini AI</p>
+    <p class="font-bold gemini-animated-gradient">Powered by Gemini AI</p>
     <p class="text-sm text-gray-500 mt-1">מו"פ הנדסת פרומפטים בשיתוף Gemini AI</p>
 </div>
                  </div>
