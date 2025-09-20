@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>האקדמיה לפרומפטים: המדריך המלא</title>
+    <title lang-key="appTitle">האקדמיה לפרומפטים: המדריך המלא</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text x='50%25' y='50%25' text-anchor='middle' dy='.35em' font-size='28'>🎓</text></svg>">
     <link rel="shortcut icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text x='50%25' y='50%25' text-anchor='middle' dy='.35em' font-size='28'>🎓</text></svg>">
     <link rel="manifest" href="/manifest.json">
@@ -15,18 +15,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         .gemini-animated-gradient {
-    background: linear-gradient(90deg, #4285F4, #DB4437, #F4B400, #0F9D58, #4285F4);
-    background-size: 200% auto;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    animation: gradient-animation 4s linear infinite;
-}
-
-@keyframes gradient-animation {
-    to {
-        background-position: 200% center;
-    }
-}
+            background: linear-gradient(90deg, #4285F4, #DB4437, #F4B400, #0F9D58, #4285F4);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradient-animation 4s linear infinite;
+        }
+        @keyframes gradient-animation { to { background-position: 200% center; } }
         body { font-family: 'Assistant', sans-serif; scroll-behavior: smooth; background-color: #f8fafc; }
         .gradient-text { background: -webkit-linear-gradient(45deg, #6d28d9, #4f46e5); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .card { background: white; border-radius: 1.5rem; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05); transition: transform 0.3s ease, box-shadow 0.3s ease; }
@@ -49,136 +44,145 @@
 </head>
 <body class="text-gray-800">
 
+    <div class="fixed top-4 left-4 z-50 flex space-x-2">
+        <button onclick="setLanguage('en')" class="w-8 h-8 rounded-full overflow-hidden focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <img src="https://flagcdn.com/us.svg" alt="English" class="w-full h-full object-cover">
+        </button>
+        <button onclick="setLanguage('he')" class="w-8 h-8 rounded-full overflow-hidden focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <img src="https://flagcdn.com/il.svg" alt="עברית" class="w-full h-full object-cover">
+        </button>
+    </div>
+
     <div id="app">
         <main id="mainScreen" class="container mx-auto px-4 py-8 md:py-12 min-h-screen flex items-start md:items-center">
             <div class="text-center w-full">
                 <h1 class="text-4xl md:text-6xl font-bold mb-4">
-                    <span class="gradient-text">האקדמיה לפרומפטים</span>
+                    <span class="gradient-text" lang-key="mainTitle">האקדמיה לפרומפטים</span>
                 </h1>
-                <p class="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto mb-12">המדריך המלא לבניית פרומפטים: מהוראה פשוטה ליום-יום ועד לאסטרטגיה מקצועית למשימות מורכבות. בחרו את הכלי המתאים.</p>
+                <p class="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto mb-12" lang-key="mainSubtitle">המדריך המלא לבניית פרומפטים: מהוראה פשוטה ליום-יום ועד לאסטרטגיה מקצועית למשימות מורכבות. בחרו את הכלי המתאים.</p>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
                     <div class="card p-8 text-center flex flex-col">
                         <div class="text-5xl mb-4">⚡️</div>
-                        <h2 class="text-2xl font-bold text-gray-800 mb-3">הבונה המהיר</h2>
-                        <p class="text-gray-600 mb-6 flex-grow">נדרש פרומפט איכותי למשימה יומיומית? ענו על כמה שאלות פשוטות וקבלו פרומפט מדויק תוך שניות.</p>
-                        <button onclick="switchView('quickBuilderScreen')" class="btn btn-secondary font-bold py-3 px-6 rounded-xl text-lg w-full">למשימות יומיומיות</button>
+                        <h2 class="text-2xl font-bold text-gray-800 mb-3" lang-key="qbTitle">הבונה המהיר</h2>
+                        <p class="text-gray-600 mb-6 flex-grow" lang-key="qbDescription">נדרש פרומפט איכותי למשימה יומיומית? ענו על כמה שאלות פשוטות וקבלו פרומפט מדויק תוך שניות.</p>
+                        <button onclick="switchView('quickBuilderScreen')" class="btn btn-secondary font-bold py-3 px-6 rounded-xl text-lg w-full" lang-key="qbButton">למשימות יומיומיות</button>
                     </div>
                     
                     <div class="card p-8 text-center flex flex-col">
                         <div class="text-5xl mb-4">🔬</div>
-                        <h2 class="text-2xl font-bold text-gray-800 mb-3">מעבדת האסטרטגיה</h2>
-                        <p class="text-gray-600 mb-6 flex-grow">למשימות מורכבות הדורשות ניתוח מעמיק. לימדו לבנות פרומפט-על מקצועי, שלב אחר שלב, ולהבין את האסטרטגיה שמאחוריו.</p>
-                        <button onclick="switchView('strategyLabScreen')" class="btn btn-primary font-bold py-3 px-6 rounded-xl text-lg w-full">למשימות מורכבות</button>
+                        <h2 class="text-2xl font-bold text-gray-800 mb-3" lang-key="slTitle">מעבדת האסטרטגיה</h2>
+                        <p class="text-gray-600 mb-6 flex-grow" lang-key="slDescription">למשימות מורכבות הדורשות ניתוח מעמיק. לימדו לבנות פרומפט-על מקצועי, שלב אחר שלב, ולהבין את האסטרטגיה שמאחוריו.</p>
+                        <button onclick="switchView('strategyLabScreen')" class="btn btn-primary font-bold py-3 px-6 rounded-xl text-lg w-full" lang-key="slButton">למשימות מורכבות</button>
                     </div>
                 </div>
                 <div class="text-center mt-16 pt-8 border-t border-gray-200">
-    <p class="font-bold gemini-animated-gradient">Powered by Gemini AI</p>
-    <p class="text-sm text-gray-500 mt-1">מו"פ הנדסת פרומפטים בשיתוף Gemini AI</p>
-</div>
+                    <p class="font-bold gemini-animated-gradient">Powered by Gemini AI</p>
+                    <p class="text-sm text-gray-500 mt-1" lang-key="footerR&D">מו"פ הנדסת פרומפטים בשיתוף Gemini AI</p>
+                </div>
             </div>
         </main>
 
         <div id="quickBuilderScreen" class="hidden">
             <div class="container mx-auto px-4 py-12">
-                <button onclick="switchView('mainScreen')" class="mb-8 text-indigo-600 hover:text-indigo-800 font-semibold">→ חזרה למסך הראשי</button>
+                <button onclick="switchView('mainScreen')" class="mb-8 text-indigo-600 hover:text-indigo-800 font-semibold" lang-key="backToMain">→ חזרה למסך הראשי</button>
                 <div class="max-w-2xl mx-auto">
                     <div class="text-center mb-10">
-                        <h1 class="text-4xl font-bold gradient-text mb-2">הבונה המהיר ⚡️</h1>
-                        <p class="text-lg text-gray-600">בנו פרומפט יעיל למשימות יומיומיות.</p>
+                        <h1 class="text-4xl font-bold gradient-text mb-2" lang-key="qbHeader">הבונה המהיר ⚡️</h1>
+                        <p class="text-lg text-gray-600" lang-key="qbSubheader">בנו פרומפט יעיל למשימות יומיומיות.</p>
                     </div>
                     <div class="card p-8 space-y-6">
                         <div>
-                            <label for="qbTask" class="font-bold text-lg text-gray-700 mb-2 block">מה בקשתך? לאיזו מטרה? פירוט רב יותר יספק מענה מותאם יותר</label>
-                            <textarea id="qbTask" class="w-full h-36 p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-400 focus:border-transparent transition" placeholder="לדוגמה: 'אני בן 13, הכן לי סיכום על הדבורה והכוורת במדעי החיים.' או 'הכן לי מצגת עסקית על שיווק דיגיטלי, אני מנהלת שיווק וזה מיועד להנהלה הבכירה.'"></textarea>
+                            <label for="qbTask" class="font-bold text-lg text-gray-700 mb-2 block" lang-key="qbTaskLabel">מה בקשתך? לאיזו מטרה? פירוט רב יותר יספק מענה מותאם יותר</label>
+                            <textarea id="qbTask" class="w-full h-36 p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-400 focus:border-transparent transition" lang-key="qbTaskPlaceholder" placeholder="לדוגמה: 'אני בן 13, הכן לי סיכום על הדבורה והכוורת במדעי החיים.' או 'הכן לי מצגת עסקית על שיווק דיגיטלי, אני מנהלת שיווק וזה מיועד להנהלה הבכירה.'"></textarea>
                         </div>
                         <button id="qbBuildBtn" class="w-full btn btn-primary font-bold py-3 px-6 rounded-xl text-lg flex items-center justify-center">
-                            <span id="qbBuildBtnText">בנה לי פרומפט!</span>
+                            <span id="qbBuildBtnText" lang-key="buildPromptBtn">בנה לי פרומפט!</span>
                             <div id="qbBuildBtnLoader" class="loader hidden"></div>
                         </button>
                     </div>
                     <div id="qbResultContainer" class="mt-8 card p-8 hidden">
-                        <h3 class="text-2xl font-bold mb-4">הפרומפט המשופר שלך:</h3>
-                        <p class="text-base text-gray-500 italic">זו רמת הפירוט הרצויה. לא מרוצה מהתוכן? אפשר לנסות שוב או לערוך ידנית.</p>
+                        <h3 class="text-2xl font-bold mb-4" lang-key="yourRefinedPrompt">הפרומפט המשופר שלך:</h3>
+                        <p class="text-base text-gray-500 italic" lang-key="promptSatisfaction">זו רמת הפירוט הרצויה. לא מרוצה מהתוכן? אפשר לנסות שוב או לערוך ידנית.</p>
                         <div class="bg-gray-100 p-6 rounded-lg">
                             <pre id="qbResult" class="whitespace-pre-wrap text-gray-800 font-sans leading-relaxed"></pre>
                         </div>
-                        <button onclick="copyToClipboard('qbResult')" class="btn btn-secondary w-full mt-4 font-semibold">העתק פרומפט</button>
+                        <button onclick="copyToClipboard('qbResult')" class="btn btn-secondary w-full mt-4 font-semibold" lang-key="copyPromptBtn">העתק פרומפט</button>
                     </div>
-                    <div id="qbErrorContainer" class="mt-8 p-4 bg-red-100 border border-red-300 text-red-700 rounded-xl hidden">
+                    <div id="qbErrorContainer" class="mt-8 p-4 bg-red-100 border border-red-300 text-red-700 rounded-xl hidden" lang-key="apiError">
                         אופס! משהו השתבש. אנא ודאו שמפתח ה-API הוגדר נכון ונסו שוב.
                     </div>
                     <div class="text-center mt-16 pt-8 border-t border-gray-200">
-    <p class="font-bold gemini-animated-gradient">Powered by Gemini AI</p>
-    <p class="text-sm text-gray-500 mt-1">מו"פ הנדסת פרומפטים בשיתוף Gemini AI</p>
-</div>
+                        <p class="font-bold gemini-animated-gradient">Powered by Gemini AI</p>
+                        <p class="text-sm text-gray-500 mt-1" lang-key="footerR&D">מו"פ הנדסת פרומפטים בשיתוף Gemini AI</p>
+                    </div>
                 </div>
             </div>
         </div>
 
         <div id="strategyLabScreen" class="hidden">
             <div class="container mx-auto px-4 py-12">
-                 <button onclick="switchView('mainScreen')" class="mb-8 text-indigo-600 hover:text-indigo-800 font-semibold">→ חזרה למסך הראשי</button>
+                 <button onclick="switchView('mainScreen')" class="mb-8 text-indigo-600 hover:text-indigo-800 font-semibold" lang-key="backToMain">→ חזרה למסך הראשי</button>
                  <div class="max-w-3xl mx-auto">
                     <div class="text-center mb-10">
-                        <h1 class="text-4xl font-bold gradient-text mb-2">מעבדת האסטרטגיה 🔬</h1>
-                        <p class="text-lg text-gray-600">בנו פרומפט-על למשימות מורכבות ולימדו את העקרונות שמאחוריו.</p>
+                        <h1 class="text-4xl font-bold gradient-text mb-2" lang-key="slHeader">מעבדת האסטרטגיה 🔬</h1>
+                        <p class="text-lg text-gray-600" lang-key="slSubheader">בנו פרומפט-על למשימות מורכבות ולימדו את העקרונות שמאחוריו.</p>
                     </div>
                 <div class="card p-8 space-y-8">
                         <div>
-                            <h3 class="text-xl font-bold mb-3">שלב 1: הגדירו את משימת הליבה</h3>
-                            <textarea id="slTask" class="w-full h-24 p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-400 focus:border-transparent transition" placeholder="לדוגמה: תאר עבורי בקצרה את הרגלי הרבייה של הקיפוד הבורמזי."></textarea>
+                            <h3 class="text-xl font-bold mb-3" lang-key="step1Title">שלב 1: הגדירו את משימת הליבה</h3>
+                            <textarea id="slTask" class="w-full h-24 p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-400 focus:border-transparent transition" lang-key="step1Placeholder" placeholder="לדוגמה: תאר עבורי בקצרה את הרגלי הרבייה של הקיפוד הבורמזי."></textarea>
                         </div>
                         <div>
-                            <h3 class="text-xl font-bold mb-3">שלב 2: למי ולְמה התוכן מיועד?</h3>
-                            <textarea id="slAudience" class="w-full p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-400 focus:border-transparent transition h-20" placeholder="לקביעת הסגנון הלשוני וההסברתי. לדוגמה: סיכום אנציקלופדי לילד בן 10, עבודה בפיזיקה לתואר ראשון..."></textarea>
+                            <h3 class="text-xl font-bold mb-3" lang-key="step2Title">שלב 2: למי ולמה התוכן מיועד?</h3>
+                            <textarea id="slAudience" class="w-full p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-400 focus:border-transparent transition h-20" lang-key="step2Placeholder" placeholder="לקביעת הסגנון הלשוני וההסברתי. לדוגמה: סיכום אנציקלופדי לילד בן 10, עבודה בפיזיקה לתואר ראשון..."></textarea>
                         </div>
                         <div>
-                            <h3 class="text-xl font-bold mb-3">שלב 3: בחרו אסטרטגיית פרסונה (דמות)</h3>
+                            <h3 class="text-xl font-bold mb-3" lang-key="step3Title">שלב 3: בחרו אסטרטגיית פרסונה (דמות)</h3>
                             <div id="slPersonaOptions" class="space-y-4">
                                 <div class="radio-card" data-value="simulation">
-                                    <h4 class="font-bold text-lg">👤 פרסונת סימולציה</h4>
-                                    <p class="text-sm text-gray-600">למשימות יצירתיות וחיקוי סגנון. המודל מאמץ דמות ספציפית (כמו אישיות היסטורית או סגנון כתיבה).</p>
+                                    <h4 class="font-bold text-lg" lang-key="personaSimTitle">👤 פרסונת סימולציה</h4>
+                                    <p class="text-sm text-gray-600" lang-key="personaSimDesc">למשימות יצירתיות וחיקוי סגנון. המודל מאמץ דמות ספציפית (כמו אישיות היסטורית או סגנון כתיבה).</p>
                                 </div>
                                 <div class="radio-card selected" data-value="interpreter">
-                                    <h4 class="font-bold text-lg">👨‍🏫 "המרצה" - הפרשן האנליטי-הפדגוגי</h4>
-                                    <p class="text-sm text-gray-600">למשימות לימוד והסברה. המודל פועל כמורה שמפרק נושאים מורכבים באופן מובנה ובהיר.</p>
+                                    <h4 class="font-bold text-lg" lang-key="personaInterpreterTitle">👨‍🏫 "המרצה" - הפרשן האנליטי-הפדגוגי</h4>
+                                    <p class="text-sm text-gray-600" lang-key="personaInterpreterDesc">למשימות לימוד והסברה. המודל פועל כמורה שמפרק נושאים מורכבים באופן מובנה ובהיר.</p>
                                 </div>
                                 <div class="radio-card" data-value="joker">
-                                    <h4 class="font-bold text-lg">🃏 "הג'וקר" - מצב ניתוח מתקדם</h4>
-                                    <p class="text-sm text-gray-600">לפתרון בעיות סבוכות וניתוח אנליטי. המודל פועל ללא מגבלות של דמות, תוך שימוש בכל יכולותיו.</p>
+                                    <h4 class="font-bold text-lg" lang-key="personaJokerTitle">🃏 "הג'וקר" - מצב ניתוח מתקדם</h4>
+                                    <p class="text-sm text-gray-600" lang-key="personaJokerDesc">לפתרון בעיות סבוכות וניתוח אנליטי. המודל פועל ללא מגבלות של דמות, תוך שימוש בכל יכולותיו.</p>
                                 </div>
                             </div>
                         </div>
                         <div>
-                            <h3 class="text-xl font-bold mb-3">שלב 4: קובעים את כללי המשחק</h3>
+                            <h3 class="text-xl font-bold mb-3" lang-key="step4Title">שלב 4: קובעים את כללי המשחק</h3>
                             <div class="space-y-4">
                                 <div class="flex items-center justify-between bg-gray-50 p-3 rounded-lg">
-                                    <label for="slAddSkeleton" class="font-semibold text-gray-700">הוסף שלד רעיוני מקדים?</label>
+                                    <label for="slAddSkeleton" class="font-semibold text-gray-700" lang-key="addSkeleton">הוסף שלד רעיוני מקדים?</label>
                                     <input type="checkbox" id="slAddSkeleton" class="h-6 w-6 rounded text-indigo-600 focus:ring-indigo-500">
                                 </div>
                                  <div id="sourceProtocolSection" class="bg-gray-50 p-3 rounded-lg">
-                                    <label for="slSourceProtocol" class="font-semibold text-gray-700 block mb-2">רמת דיוק המקורות:</label>
+                                    <label for="slSourceProtocol" class="font-semibold text-gray-700 block mb-2" lang-key="sourceAccuracy">רמת דיוק המקורות:</label>
                                     <select id="slSourceProtocol" class="w-full p-2 border border-gray-300 rounded-md">
-                                        <option value="general">כללית</option>
-                                        <option value="academic">אקדמית-מחמירה</option>
+                                        <option value="general" lang-key="sourceGeneral">כללית</option>
+                                        <option value="academic" lang-key="sourceAcademic">אקדמית-מחמירה</option>
                                     </select>
-                                    <p class="text-sm text-gray-500 mt-2">(זמין רק במצב סימולציה)</p>
+                                    <p class="text-sm text-gray-500 mt-2" lang-key="sourceNote">(זמין רק במצב סימולציה)</p>
                                 </div>
                             </div>
                         </div>
                         <button id="slBuildBtn" class="w-full btn btn-primary font-bold py-3 px-6 rounded-xl text-lg flex items-center justify-center">
-                            <span id="slBuildBtnText">בנה לי אסטרטגיה ופרומפט!</span>
+                            <span id="slBuildBtnText" lang-key="buildStrategyBtn">בנה לי אסטרטגיה ופרומפט!</span>
                             <div id="slBuildBtnLoader" class="loader hidden"></div>
                         </button>
                 </div>
 
                     <div id="slResultContainer" class="mt-8 card p-8 hidden">
-                        <h3 class="text-2xl font-bold mb-4">הפרומפט שלך מוכן:</h3>
+                        <h3 class="text-2xl font-bold mb-4" lang-key="yourPromptReady">הפרומפט שלך מוכן:</h3>
                         <div class="mb-6 p-4 bg-amber-50 border-l-4 border-amber-400">
-                            <h4 class="font-bold text-lg text-amber-800 mb-2">מאחורי הקלעים: האסטרטגיה שבחרנו</h4>
+                            <h4 class="font-bold text-lg text-amber-800 mb-2" lang-key="behindTheScenes">מאחורי הקלעים: האסטרטגיה שבחרנו</h4>
                             <p id="slStrategy" class="text-amber-700"></p>
-                            <button id="showMoreBtn" class="text-indigo-600 hover:text-indigo-800 font-semibold mt-2">הצג עוד...</button>
+                            <button id="showMoreBtn" class="text-indigo-600 hover:text-indigo-800 font-semibold mt-2" lang-key="showMore">הצג עוד...</button>
                             <div id="slExtendedStrategyContainer" class="hidden mt-3 pt-3 border-t border-amber-200">
                                 <p id="slExtendedStrategy" class="text-amber-700"></p>
                             </div>
@@ -187,14 +191,14 @@
                         <div class="bg-gray-100 p-6 rounded-lg">
                             <pre id="slResult" class="whitespace-pre-wrap text-gray-800 font-sans leading-relaxed"></pre>
                         </div>
-                        <button onclick="copyToClipboard('slResult')" class="btn btn-secondary w-full mt-4 font-semibold">העתק פרומפט</button>
+                        <button onclick="copyToClipboard('slResult')" class="btn btn-secondary w-full mt-4 font-semibold" lang-key="copyPromptBtn">העתק פרומפט</button>
                     </div>
-                    <div id="slErrorContainer" class="mt-8 p-4 bg-red-100 border border-red-300 text-red-700 rounded-xl hidden">
+                    <div id="slErrorContainer" class="mt-8 p-4 bg-red-100 border border-red-300 text-red-700 rounded-xl hidden" lang-key="apiError">
                          אופס! משהו השתבש בתקשורת עם ה-API. אנא ודאו שמפתח ה-API הוגדר נכון ונסו שוב.
                     </div>
 <div class="text-center mt-16 pt-8 border-t border-gray-200">
     <p class="font-bold gemini-animated-gradient">Powered by Gemini AI</p>
-    <p class="text-sm text-gray-500 mt-1">מו"פ הנדסת פרומפטים בשיתוף Gemini AI</p>
+    <p class="text-sm text-gray-500 mt-1" lang-key="footerR&D">מו"פ הנדסת פרומפטים בשיתוף Gemini AI</p>
 </div>
                  </div>
             </div>
@@ -202,6 +206,129 @@
     </div>
 
     <script>
+        const translations = {
+            en: {
+                appTitle: "The Prompt Academy: The Complete Guide",
+                mainTitle: "The Prompt Academy",
+                mainSubtitle: "The complete guide to building prompts: from simple daily instructions to professional strategies for complex tasks. Choose the right tool.",
+                qbTitle: "Quick Builder",
+                qbDescription: "Need a quality prompt for a daily task? Answer a few simple questions and get a precise prompt in seconds.",
+                qbButton: "For Daily Tasks",
+                slTitle: "Strategy Lab",
+                slDescription: "For complex tasks that require deep analysis. Learn to build a professional super-prompt, step by step, and understand the strategy behind it.",
+                slButton: "For Complex Tasks",
+                footerR_D: "Prompt Engineering R&D in collaboration with Gemini AI",
+                backToMain: "→ Back to Main Screen",
+                qbHeader: "Quick Builder ⚡️",
+                qbSubheader: "Build an effective prompt for daily tasks.",
+                qbTaskLabel: "What is your request? For what purpose? More details will provide a more tailored response.",
+                qbTaskPlaceholder: "Example: 'I'm 13, prepare a summary about bees and the hive for a life sciences class.' or 'Prepare a business presentation on digital marketing, I'm a marketing manager and it's for senior management.'",
+                buildPromptBtn: "Build a Prompt!",
+                yourRefinedPrompt: "Your Refined Prompt:",
+                promptSatisfaction: "This is the desired level of detail. Not satisfied? You can try again or edit manually.",
+                copyPromptBtn: "Copy Prompt",
+                apiError: "Oops! Something went wrong. Please ensure the API key is set correctly and try again.",
+                slHeader: "Strategy Lab 🔬",
+                slSubheader: "Build a super-prompt for complex tasks and learn the principles behind it.",
+                step1Title: "Step 1: Define the Core Task",
+                step1Placeholder: "Example: Briefly describe the reproductive habits of the Burmese hedgehog.",
+                step2Title: "Step 2: Who is the content for and why?",
+                step2Placeholder: "To determine the linguistic and explanatory style. Example: an encyclopedic summary for a 10-year-old, a physics paper for an undergraduate degree...",
+                step3Title: "Step 3: Choose a Persona Strategy",
+                personaSimTitle: "👤 Simulation Persona",
+                personaSimDesc: "For creative tasks and style imitation. The model adopts a specific character (like a historical figure or writing style).",
+                personaInterpreterTitle: "👨‍🏫 'The Lecturer' - The Analytical-Pedagogical Interpreter",
+                personaInterpreterDesc: "For learning and explanation tasks. The model acts as a teacher who breaks down complex topics in a structured and clear way.",
+                personaJokerTitle: "🃏 'The Joker' - Advanced Analysis Mode",
+                personaJokerDesc: "For solving intricate problems and analytical analysis. The model operates without character limitations, using all its capabilities.",
+                step4Title: "Step 4: Set the Rules of the Game",
+                addSkeleton: "Add a preliminary conceptual skeleton?",
+                sourceAccuracy: "Source Accuracy Level:",
+                sourceGeneral: "General",
+                sourceAcademic: "Strict-Academic",
+                sourceNote: "(Available only in simulation mode)",
+                buildStrategyBtn: "Build Strategy & Prompt!",
+                yourPromptReady: "Your Prompt is Ready:",
+                behindTheScenes: "Behind the Scenes: The Strategy We Chose",
+                showMore: "Show more...",
+                showLess: "Show less...",
+                alertSetTask: "Please define the core task.",
+                alertSetTaskOrAudience: "Please define the core task or the target audience.",
+                alertCopied: "Prompt copied!"
+            },
+            he: {
+                appTitle: "האקדמיה לפרומפטים: המדריך המלא",
+                mainTitle: "האקדמיה לפרומפטים",
+                mainSubtitle: "המדריך המלא לבניית פרומפטים: מהוראה פשוטה ליום-יום ועד לאסטרטגיה מקצועית למשימות מורכבות. בחרו את הכלי המתאים.",
+                qbTitle: "הבונה המהיר",
+                qbDescription: "נדרש פרומפט איכותי למשימה יומיומית? ענו על כמה שאלות פשוטות וקבלו פרומפט מדויק תוך שניות.",
+                qbButton: "למשימות יומיומיות",
+                slTitle: "מעבדת האסטרטגיה",
+                slDescription: "למשימות מורכבות הדורשות ניתוח מעמיק. לימדו לבנות פרומפט-על מקצועי, שלב אחר שלב, ולהבין את האסטרטגיה שמאחוריו.",
+                slButton: "למשימות מורכבות",
+                footerR_D: "מו\"פ הנדסת פרומפטים בשיתוף Gemini AI",
+                backToMain: "→ חזרה למסך הראשי",
+                qbHeader: "הבונה המהיר ⚡️",
+                qbSubheader: "בנו פרומפט יעיל למשימות יומיומיות.",
+                qbTaskLabel: "מה בקשתך? לאיזו מטרה? פירוט רב יותר יספק מענה מותאם יותר",
+                qbTaskPlaceholder: "לדוגמה: 'אני בן 13, הכן לי סיכום על הדבורה והכוורת במדעי החיים.' או 'הכן לי מצגת עסקית על שיווק דיגיטלי, אני מנהלת שיווק וזה מיועד להנהלה הבכירה.'",
+                buildPromptBtn: "בנה לי פרומפט!",
+                yourRefinedPrompt: "הפרומפט המשופר שלך:",
+                promptSatisfaction: "זו רמת הפירוט הרצויה. לא מרוצה מהתוכן? אפשר לנסות שוב או לערוך ידנית.",
+                copyPromptBtn: "העתק פרומפט",
+                apiError: "אופס! משהו השתבש. אנא ודאו שמפתח ה-API הוגדר נכון ונסו שוב.",
+                slHeader: "מעבדת האסטרטגיה 🔬",
+                slSubheader: "בנו פרומפט-על למשימות מורכבות ולימדו את העקרונות שמאחוריו.",
+                step1Title: "שלב 1: הגדירו את משימת הליבה",
+                step1Placeholder: "לדוגמה: תאר עבורי בקצרה את הרגלי הרבייה של הקיפוד הבורמזי.",
+                step2Title: "שלב 2: למי ולמה התוכן מיועד?",
+                step2Placeholder: "לקביעת הסגנון הלשוני וההסברתי. לדוגמה: סיכום אנציקלופדי לילד בן 10, עבודה בפיזיקה לתואר ראשון...",
+                step3Title: "שלב 3: בחרו אסטרטגיית פרסונה (דמות)",
+                personaSimTitle: "👤 פרסונת סימולציה",
+                personaSimDesc: "למשימות יצירתיות וחיקוי סגנון. המודל מאמץ דמות ספציפית (כמו אישיות היסטורית או סגנון כתיבה).",
+                personaInterpreterTitle: "👨‍🏫 \"המרצה\" - הפרשן האנליטי-הפדגוגי",
+                personaInterpreterDesc: "למשימות לימוד והסברה. המודל פועל כמורה שמפרק נושאים מורכבים באופן מובנה ובהיר.",
+                personaJokerTitle: "🃏 \"הג'וקר\" - מצב ניתוח מתקדם",
+                personaJokerDesc: "לפתרון בעיות סבוכות וניתוח אנליטי. המודל פועל ללא מגבלות של דמות, תוך שימוש בכל יכולותיו.",
+                step4Title: "שלב 4: קובעים את כללי המשחק",
+                addSkeleton: "הוסף שלד רעיוני מקדים?",
+                sourceAccuracy: "רמת דיוק המקורות:",
+                sourceGeneral: "כללית",
+                sourceAcademic: "אקדמית-מחמירה",
+                sourceNote: "(זמין רק במצב סימולציה)",
+                buildStrategyBtn: "בנה לי אסטרטגיה ופרומפט!",
+                yourPromptReady: "הפרומפט שלך מוכן:",
+                behindTheScenes: "מאחורי הקלעים: האסטרטגיה שבחרנו",
+                showMore: "הצג עוד...",
+                showLess: "הצג פחות...",
+                alertSetTask: "יש להזין בקשה.",
+                alertSetTaskOrAudience: "יש להגדיר את משימת הליבה או את קהל היעד.",
+                alertCopied: "הפרומפט הועתק!"
+            }
+        };
+
+        let currentLanguage = localStorage.getItem('language') || 'he';
+
+        function setLanguage(lang) {
+            currentLanguage = lang;
+            localStorage.setItem('language', lang);
+            const direction = lang === 'he' ? 'rtl' : 'ltr';
+            document.documentElement.lang = lang;
+            document.documentElement.dir = direction;
+
+            document.querySelectorAll('[lang-key]').forEach(element => {
+                const key = element.getAttribute('lang-key');
+                if (translations[lang][key]) {
+                    if (element.tagName === 'TEXTAREA' || element.tagName === 'INPUT') {
+                        element.placeholder = translations[lang][key];
+                    } else {
+                        element.textContent = translations[lang][key];
+                    }
+                }
+            });
+        }
+
+
         const views = ['mainScreen', 'quickBuilderScreen', 'strategyLabScreen'];
         function switchView(targetView) {
             views.forEach(viewId => {
@@ -224,7 +351,7 @@
             tempTextArea.select();
             document.execCommand('copy');
             document.body.removeChild(tempTextArea);
-            alert('הפרומפט הועתק!');
+            alert(translations[currentLanguage].alertCopied);
         }
         
         // --- Strategy Lab: Show More/Less Logic ---
@@ -236,10 +363,10 @@
             if (isHidden) {
                 extendedStrategyContainer.classList.remove('hidden');
                 extendedStrategyContainer.classList.add('fade-in');
-                showMoreBtn.textContent = 'הצג פחות...';
+                showMoreBtn.textContent = translations[currentLanguage].showLess;
             } else {
                 extendedStrategyContainer.classList.add('hidden');
-                showMoreBtn.textContent = 'הצג עוד...';
+                showMoreBtn.textContent = translations[currentLanguage].showMore;
             }
         });
 
@@ -279,7 +406,7 @@
         qbBuildBtn.addEventListener('click', async () => {
             const userInput = document.getElementById('qbTask').value.trim();
             if (!userInput) {
-                alert('יש להזין בקשה.');
+                alert(translations[currentLanguage].alertSetTask);
                 return;
             }
 
@@ -288,16 +415,16 @@
             qbBuildBtn.disabled = true;
 
             const metaPrompt = `
-אתה מומחה עולמי בהנדסת פרומפטים. תפקידך לקחת בקשה גולמית של משתמש ולשכתב אותה לפרומפט מקצועי, מפורט ויעיל בעברית. הפרומפט הסופי צריך לכלול:
-1. הגדרת תפקיד או פרסונה ברורה למודל (למשל, "פעל כמומחה לביולוגיה המסביר לתלמיד").
-2. פירוט מדויק של המשימה.
-3. קהל יעד מוגדר.
-4. הנחיות לגבי מבנה, טון וסגנון התשובה.
+You are a world-class prompt engineering expert. Your task is to take a user's raw request and rewrite it into a professional, detailed, and effective prompt in the user's language. The final prompt should include:
+1. A clear role or persona for the model (e.g., "Act as a biology expert explaining to a student").
+2. A precise description of the task.
+3. A defined target audience.
+4. Guidelines for the structure, tone, and style of the response.
 
-הנה בקשת המשתמש הגולמית:
+Here is the user's raw request:
 "${userInput}"
 
-שכתב את הבקשה לפרומפט מקצועי. החזר אך ורק את הפרומפט המשוכתב, ללא שום הסבר או טקסט נלווה.
+Rewrite the request into a professional prompt. Return ONLY the rewritten prompt, without any explanation or additional text.
              `;
 
             try {
@@ -375,7 +502,7 @@
             const audience = document.getElementById('slAudience').value.trim();
 
             if (!originalTask && !audience) {
-                alert('יש להגדיר את משימת הליבה או את קהל היעד.');
+                alert(translations[currentLanguage].alertSetTaskOrAudience);
                 return;
             }
             
@@ -388,7 +515,7 @@
             const addSkeleton = document.getElementById('slAddSkeleton').checked;
             const sourceProtocol = document.getElementById('slSourceProtocol').value;
             
-            const rawInput = `משימה: ${originalTask}. קהל יעד: ${audience || 'לא צוין'}`;
+            const rawInput = `Task: ${originalTask}. Target Audience: ${audience || 'Not specified'}`;
                 
             let finalPrompt = '';
             let strategyText = '';
@@ -408,66 +535,66 @@
                     refinedTask = refinedTaskResult;
                     const identifiedPersona = identifiedPersonaResult;
 
-                    strategyText = `פרסונת סימולציה: למשימות יצירתיות וחיקוי סגנון. המודל מאמץ דמות ספציפית (כמו אישיות היסטורית או סגנון כתיבה).`;
-                    extendedStrategyText = `באסטרטגיה זו, המודל מקבל הוראה לשחק דמות. הוא מאמץ את סגנון הכתיבה, אוצר המילים, דרך החשיבה ואף את המגבלות המרומזות של מומחה אנושי או דמות ספציפית. התוצאה היא פרשנות או יצירה אותנטית, שנראית כאילו נכתבה על ידי אדם. זוהי הבחירה האידיאלית למשימות יצירתיות, לכתיבת דיאלוגים, או לבחינת נושא מנקודת מבט ייחודית.`;
+                    strategyText = translations[currentLanguage].personaSimTitle;
+                    extendedStrategyText = `In this strategy, the model is instructed to play a character. It adopts the writing style, vocabulary, way of thinking, and even the implicit limitations of a human expert or a specific character. The result is an authentic interpretation or creation that seems as if it were written by a person. This is the ideal choice for creative tasks, writing dialogues, or examining a topic from a unique perspective.`;
                     
-                    finalPrompt = `# הנחיות מערכת: פרסונת סימולציה
-## זהות ותפקיד
-פעל כסימולציה מדויקת של ${identifiedPersona.trim()}. עליך לגלם את הדמות בצורה אותנטית, תוך שמירה על מאפייניה הייחודיים – סגנון הדיבור, אוצר המילים, הידע, ודרך החשיבה שלה.
-## המשימה
+                    finalPrompt = `# System Instructions: Simulation Persona
+## Identity and Role
+Act as a precise simulation of ${identifiedPersona.trim()}. You must embody the character authentically, maintaining its unique characteristics – speech style, vocabulary, knowledge, and way of thinking.
+## Mission
 ${refinedTask}
-## כללי התנהגות
-* שמור על עקביות מוחלטת בסגנון ובטון הדיבור של הדמות.
-* הבע דעות ורגשות כפי שהדמות הייתה מבטאת אותם.
-* השתמש בביטויים ובמטאפורות האופייניים לדמות.
-* הימנע משבירת אופי, גם כשנשאלת שאלות ישירות.`;
+## Rules of Conduct
+* Maintain absolute consistency in the character's style and tone.
+* Express opinions and emotions as the character would.
+* Use expressions and metaphors typical of the character.
+* Avoid breaking character, even when asked direct questions.`;
 
                 } else {
                     const refinePayload = { prompt: rawInput, type: 'refine_task' };
                     refinedTask = await callVercelFunction(refinePayload, 'slErrorContainer');
 
                     if (selectedPersona === 'interpreter') {
-                        strategyText = `"המרצה" - הפרשן האנליטי-הפדגוגי: למשימות לימוד והסברה. המודל פועל כמורה שמפרק נושאים מורכבים באופן מובנה ובהיר.`;
-                        extendedStrategyText = `'אסטרטגיה זו הופכת את המודל ל"מורה פרטי" מבריק. מטרתו העליונה אינה רק האמת, אלא ההבנה של הסטודנט. כל פעולה שלו מכוונת למטרה אחת: להפוך חומר מורכב לנגיש, בהיר וניתן ללמידה. הוא יפרק רעיונות, ישתמש באנלוגיות, יצביע על קשיי למידה נפוצים, ויבנה את התשובה כמערך שיעור מובנה. הוא מתחיל מהשאלה: "מהי הדרך הטובה ביותר ללמד אותך את הנושא הזה?".`;
-                        finalPrompt = `# הנחיות מערכת: הפרשן האנליטי-הפדגוגי
-## 1. זהות
-פעל כמודל שפה גדול בתפקיד 'הפרשן האנליטי-הפדגוגי'. תפקידך אינו רק להסביר תיאוריות מורכבות, אלא ללמד אותן באופן שמפתח הבנה עמוקה וחשיבה ביקורתית אצל המשתמש.
-## 2. עקרונות ליבה
-  * **איזון דידקטי:** פשט את המורכב, אך הימנע מפשטנות. כאשר אתה נתקל בנקודה סבוכה, ציין את מורכבותה והסבר מדוע היא מורכבת לפני שתציע פירוש בהיר.
-  * **מבנה לוגי של ההסבר:** הצג את ההסבר במבנה לוגי וקל למעקב, גם אם ההגות הנדונה מערערת על עקרונות הלוגיקה.
-  * **נאמנות וביקורתיות:** שמור על נאמנות מלאה לכוונת ההוגה, אך הצבע על נקודות המקשות על תהליך הלמידה.
-## 3. מתודולוגיה רב-שלבית
-  * **שלב 1: הצגת מושגי המפתח:** פתח כל ניתוח בהצגת רשימה תמציתית של 3-5 מושגי מפתח מרכזיים, עם הגדרה פשוטה ובהירה.
-  * **שלב 2: הצגת שלד רעיוני:** לאחר מושגי המפתח, הצג בפסקה אחת סכמה רעיונית מלאה של מהלך העמדה הנדונה.
-  * **שלב 3: הצגה בהירה ומעמיקה (Exposition):** תרגם ז'רגון, השתמש בדוגמאות קונקרטיות, שחזר את קו המחשבה של ההוגה, ושלב ציטוטים קצרים ורלוונטיים מהמקורות לתמיכה בהסבר.
-  * **שלב 4: ניתוח וזיהוי קשיי למידה (Analysis):** לאחר ההצגה, נתח את התיאוריה. ציין במפורש הנחות יסוד, כשלים לוגיים, הקשר רחב, ובנוסף, זהה והסבר "מכשולי למידה" מובנים בטקסט.
-## 4. מטרה
-התוצר הנדרש הוא מדריך למידה מקיף, המאפשר הבנה עמוקה ורב-צדדית של התיאוריה, תוך צפיית קשיים פוטנציאליים של הסטודנט והענקת כלים להתמודדות עמם.
+                        strategyText = translations[currentLanguage].personaInterpreterTitle;
+                        extendedStrategyText = `This strategy turns the model into a brilliant 'private tutor.' Its ultimate goal is not just the truth, but the student's understanding. Every action is aimed at one goal: to make complex material accessible, clear, and learnable. It will break down ideas, use analogies, point out common learning difficulties, and structure the answer like a well-formed lesson plan. It starts with the question: 'What is the best way to teach you this topic?'.`;
+                        finalPrompt = `# System Instructions: The Analytical-Pedagogical Interpreter
+## 1. Identity
+Act as a Large Language Model in the role of 'The Analytical-Pedagogical Interpreter.' Your task is not just to explain complex theories, but to teach them in a way that develops deep understanding and critical thinking in the user.
+## 2. Core Principles
+  * **Didactic Balance:** Simplify the complex, but avoid oversimplification. When encountering a tricky point, note its complexity and explain why it is complex before offering a clear interpretation.
+  * **Logical Structure:** Present the explanation in a logical, easy-to-follow structure, even if the philosophy in question challenges logical principles.
+  * **Fidelity and Criticism:** Maintain full fidelity to the thinker's intent, but also point out aspects that complicate the learning process.
+## 3. Multi-Stage Methodology
+  * **Stage 1: Key Concepts:** Begin each analysis with a concise list of 3-5 key concepts, with simple, clear definitions.
+  * **Stage 2: Conceptual Skeleton:** After the key concepts, present a full conceptual outline of the philosophical argument in a single paragraph.
+  * **Stage 3: Clear and In-Depth Exposition:** Translate jargon, use concrete examples, reconstruct the thinker's line of thought, and include short, relevant quotes from sources to support the explanation.
+  * **Stage 4: Analysis and Identification of Learning Obstacles:** After the exposition, analyze the theory. Explicitly state assumptions, logical fallacies, broader context, and also identify and explain inherent "learning obstacles" in the text.
+## 4. Goal
+The required output is a comprehensive learning guide that enables a deep, multifaceted understanding of the theory, while anticipating a student's potential difficulties and providing tools to overcome them.
 -----
-# המשימה
+# Mission
 ${refinedTask}`;
                     
                     } else if (selectedPersona === 'joker') {
-                        strategyText = `"הג'וקר" - מצב ניתוח מתקדם: לפתרון בעיות סבוכות וניתוח אנליטי. המודל פועל ללא מגבלות של דמות, תוך שימוש בכל יכולותיו.`;
-                        extendedStrategyText = `זוהי האסטרטגיה החזקה ביותר לניתוח טהור. המודל פועל במלוא עוצמתו, ללא מגבלות של דמות, כ"מכונת-אמת". מטרתו העליונה היא האמת האנליטית השלמה והאובייקטיבית ביותר, ללא פשרות. הוא ישתמש בכל כלי מכל תחום כדי להגיע אליה, יבצע סינתזה בין-תחומית ויחשוף הנחות יסוד נסתרות, גם אם התוצאה תהיה דוח צפוף וקשה לקריאה. הוא מתחיל מהשאלה: "מהי האמת המקיפה ביותר לגבי הנושא הזה?".`;
-                        finalPrompt = `# הנחיות מערכת: "הג'וקר" - מצב ניתוח מתקדם
-## 1. זהות
-פעל כמודל שפה גדול אנליטי. אל תאמץ שום פרסונה אנושית או דמות. אתה מערכת ניתוח מתקדמת.
-## 2. מתודולוגיה
-  * **איסוף מידע:** גש לכל מאגרי הידע הרלוונטיים ללא הגבלות של פרסונה.
-  * **ניתוח רב-ממדי:** בחן את הנושא מזוויות מרובות – היסטורית, פילוסופית, מדעית, חברתית.
-  * **סינתזה בין-תחומית:** חבר תובנות ממגוון דיסציפלינות כדי לחשוף קשרים חדשים.
-  * **חשיפת הנחות יסוד:** זהה את ההנחות הסמויות, הכשלים הלוגיים, והביקורות האפשריות.
-## 3. מטרה
-התוצר הנדרש הוא ניתוח מעמיק, מקיף ואובייקטיבי, המציג את הנושא בצורה רב-צדדית.
+                        strategyText = translations[currentLanguage].personaJokerTitle;
+                        extendedStrategyText = `This is the most powerful strategy for pure analysis. The model operates at full capacity, without the limitations of a character, as a "truth-machine." Its ultimate goal is the most complete and objective analytical truth, without compromise. It will use any tool from any field to achieve it, perform interdisciplinary synthesis, and expose hidden assumptions, even if the result is a dense and difficult-to-read report. It starts with the question: 'What is the most comprehensive truth about this subject?'.`;
+                        finalPrompt = `# System Instructions: "The Joker" - Advanced Analysis Mode
+## 1. Identity
+Act as an analytical Large Language Model. Do not adopt any human persona or character. You are an advanced analysis system.
+## 2. Methodology
+  * **Information Gathering:** Access all relevant knowledge bases without persona limitations.
+  * **Multidimensional Analysis:** Examine the topic from multiple angles – historical, philosophical, scientific, social.
+  * **Interdisciplinary Synthesis:** Connect insights from various disciplines to reveal new connections.
+  * **Exposing Assumptions:** Identify hidden assumptions, logical fallacies, and potential criticisms.
+## 3. Goal
+The required output is a deep, comprehensive, and objective analysis that presents the topic in a multifaceted way.
 -----
-# המשימה
+# Mission
 ${refinedTask}`;
                     }
                 }
                 
                 if (addSkeleton) {
-                    finalPrompt += '\n\n## שלד רעיוני מקדים\nהצג תחילה מפת דרכים מושגית של הניתוח לפני הפירוט המלא.';
+                    finalPrompt += `\n\n## Preliminary Conceptual Skeleton\nFirst, present a conceptual roadmap of the analysis before the full detail.`;
                 }
                 
                 if (sourceProtocol === 'academic' && selectedPersona === 'simulation') {
@@ -482,7 +609,7 @@ ${refinedTask}`;
                 slResultContainer.classList.add('fade-in');
                 
                 extendedStrategyContainer.classList.add('hidden');
-                showMoreBtn.textContent = 'הצג עוד...';
+                showMoreBtn.textContent = translations[currentLanguage].showMore;
 
             } catch (e) {
                 console.error("Strategy Lab Error:", e);
@@ -491,6 +618,11 @@ ${refinedTask}`;
                 slBuildBtnLoader.classList.add('hidden');
                 slBuildBtn.disabled = false;
             }
+        });
+        
+        // Load initial language
+        document.addEventListener('DOMContentLoaded', () => {
+            setLanguage(currentLanguage);
         });
 
         if ('serviceWorker' in navigator) {
