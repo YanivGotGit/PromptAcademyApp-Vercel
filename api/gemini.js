@@ -18,14 +18,14 @@ module.exports = async (req, res) => {
     }
 
     const genAI = new GoogleGenerativeAI(API_KEY);
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro-latest" });
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
 
     if (type === 'identify_persona') {
       const personaIdentificationPrompt = `Your task is to identify a specific persona from the user's request. Rules: 1. You MUST identify specific, iconic figures from direct or indirect descriptions. 2. If no specific figure is implied, identify the general role or style. 3. Return ONLY the resulting name or style in English. Example 1: User request: "Write about war in the style of War and Peace" Output: Leo Tolstoy Example 2: User request: "Answer as Plato's student and successor" Output: Aristotle User request: "${prompt}" Output:`;
       const personaResult = await model.generateContent(personaIdentificationPrompt);
       const englishPersona = personaResult.response.text().trim();
 
-      const modelForJson = genAI.getGenerativeModel({ model: "gemini-1.5-pro-latest", generationConfig: { responseMimeType: "application/json", temperature: 0 } });
+      const modelForJson = genAI.getGenerativeModel({ model: "gemini-1.5-pro", generationConfig: { responseMimeType: "application/json", temperature: 0 } });
       const translationPrompt = `Return a JSON object with a single key "translation". The value must be the standard, common Hebrew spelling for the input phrase, without any vowel points (nikkud). Example 1: Input: "Plato" Output: { "translation": "אפלטון" } Example 2: Input: "Aristotle" Output: { "translation": "אריסטו" } Input: "${englishPersona}" Output:`;
       const translationResult = await modelForJson.generateContent(translationPrompt);
       const jsonResponseText = translationResult.response.text();
@@ -64,4 +64,5 @@ Refined mission paragraph:`;
     return res.status(500).json({ error: errorMessage });
   }
 };
+
 
