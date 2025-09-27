@@ -51,6 +51,12 @@
         .identity-section { transition: all 0.3s ease; }
 .identity-section.hidden { opacity: 0; max-height: 0; overflow: hidden; padding: 0; margin: 0; }
 .identity-section.visible { opacity: 1; max-height: 200px; }
+      .simulation-block {
+    background-color: #f7f8ff;
+    border: 1px solid #e0e7ff;
+    border-radius: 1.25rem;
+    padding: 1.5rem;
+}  
     </style>
 </head>
 <body class="text-gray-800">
@@ -142,37 +148,30 @@
                             <h3 class="text-xl font-bold mb-3">שלב 2: למי ולְמה התוכן מיועד?</h3>
                             <textarea id="slAudience" class="w-full p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-400 focus:border-transparent transition h-20" placeholder="לקביעת הסגנון הלשוני וההסברתי. לדוגמה: סיכום אנציקלופדי לילד בן 10, עבודה בפיזיקה לתואר ראשון וכדומה."></textarea>
                         </div>
-                        <div>
-                            <h3 class="text-xl font-bold mb-3">שלב 3: בחרו אסטרטגיית פרסונה (דמות)</h3>
-                            <div id="slPersonaOptions" class="space-y-4">
-                                <div class="radio-card" data-value="simulation">
-                                    <h4 class="font-bold text-lg">👤 סימולציה מתקדמת</h4>
-                                    <p class="text-sm text-gray-600">דמות כבקשתך. יש להזין ב"שלב 1" תיאור מסוים של מקצוע או מומחיות, דמות או סגנון. המודל יפעל בהתאם ויספק מענה מקצועי או יגלם דמות וסגנון.
-</p>
-                                </div>
-                                <div class="radio-card selected" data-value="interpreter">
-                                    <h4 class="font-bold text-lg">👨‍🏫 "המרצה" - הפרשן האנליטי-הפדגוגי</h4>
-                                    <p class="text-sm text-gray-600">למשימות לימוד והסברה. המודל פועל כמורה שמפרק נושאים מורכבים באופן מובנה ובהיר.</p>
-                                </div>
-                                <div class="radio-card" data-value="joker">
-                                    <h4 class="font-bold text-lg">🃏 "הג'וקר" - מצב ניתוח מתקדם</h4>
-                                    <p class="text-sm text-gray-600">לפתרון בעיות סבוכות וניתוח אנליטי. המודל פועל ללא מגבלות של דמות, תוך שימוש בכל יכולותיו.</p>
-                                </div>
-                            </div>
-                        </div>
-                    <!-- תיבת זהות דינמית -->
-                        <div>
-                            <div id="identitySection" class="identity-section hidden">
-                            <h3 class="text-xl font-bold mb-3">הגדר זהות לסימולציה:</h3>
-                            <textarea id="slIdentity" class="w-full p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-400 focus:border-transparent transition h-16" placeholder="לדוגמה: 'מהנדסת תוכנה', 'ביאליק', 'הארי פוטר'"></textarea>
-                            </div>
+                        <div id="slPersonaOptions" class="space-y-4">
+    <div class="radio-card selected" data-value="interpreter">
+        <h4 class="font-bold text-lg">👨‍🏫 "המרצה" - הפרשן האנליטי-הפדגוגי</h4>
+        <p class="text-sm text-gray-600">למשימות לימוד והסברה. המודל פועל כמורה שמפרק נושאים מורכבים באופן מובנה ובהיר.</p>
+    </div>
 
-                    <!-- הודעת זהות קבועה -->
-                            <div id="fixedIdentityMessage" class="identity-section visible bg-blue-50 p-4 rounded-lg">
-                            <h4 class="font-semibold text-blue-800">זהות קבועה:</h4>
-                            <p id="fixedIdentityText" class="text-blue-700">מודל שפה אנליטי</p>
-                            </div>
-                       </div>
+    <div class="radio-card" data-value="joker">
+        <h4 class="font-bold text-lg">🃏 "הג'וקר" - מצב ניתוח מתקדם</h4>
+        <p class="text-sm text-gray-600">לפתרון בעיות סבוכות וניתוח אנליטי. המודל פועל ללא מגבלות של דמות, תוך שימוש בכל יכולותיו.</p>
+    </div>
+
+    <div class="simulation-block space-y-4">
+        <div class="radio-card" data-value="simulation">
+            <h4 class="font-bold text-lg">👤 סימולציה מתקדמת</h4>
+            <p class="text-sm text-gray-600">דמות כבקשתך. יש להזין בתיבת ה"זהות" תיאור מסוים של מקצוע, מומחיות, דמות או סגנון.</p>
+        </div>
+        
+        <div>
+            <label for="slIdentity" class="font-bold text-lg text-gray-700 mb-2 block">הגדר זהות לסימולציה:</label>
+            <textarea id="slIdentity" class="w-full p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-400 focus:border-transparent transition h-16" placeholder="לדוגמה: 'מהנדסת תוכנה', 'ביאליק', 'הארי פוטר'"></textarea>
+        </div>
+    </div>
+</div>
+                    
                         <div>
                             <h3 class="text-xl font-bold mb-3">שלב 4: קובעים את כללי המשחק</h3>
                             <div class="space-y-4">
@@ -341,34 +340,9 @@
         });
 
         // --- Strategy Lab Logic ---
-        const identitySection = document.getElementById('identitySection');
-const fixedIdentityMessage = document.getElementById('fixedIdentityMessage');
-const fixedIdentityText = document.getElementById('fixedIdentityText');
         const personaOptions = document.getElementById('slPersonaOptions');
         const sourceProtocolSection = document.getElementById('sourceProtocolSection');
-        // פונקציה לעדכון תצוגת הזהות
-function updateIdentityDisplay(selectedPersona) {
-    if (selectedPersona === 'simulation') {
-        // הצג תיבת זהות דינמית
-        identitySection.classList.remove('hidden');
-        identitySection.classList.add('visible');
-        fixedIdentityMessage.classList.add('hidden');
-        fixedIdentityMessage.classList.remove('visible');
-    } else {
-        // הסתר תיבת זהות והצג הודעה קבועה
-        identitySection.classList.add('hidden');
-        identitySection.classList.remove('visible');
-        fixedIdentityMessage.classList.remove('hidden');
-        fixedIdentityMessage.classList.add('visible');
         
-        // עדכן טקסט לפי סוג הפרסונה
-        if (selectedPersona === 'interpreter') {
-            fixedIdentityText.textContent = 'מרצה אקדמי המתמחה בהסברה ופירוק נושאים מורכבים';
-        } else if (selectedPersona === 'joker') {
-            fixedIdentityText.textContent = 'מודל שפה אנליטי ללא מגבלות דמות - מתמחה בניתוח מתקדם';
-        }
-    }
-}
         personaOptions.addEventListener('click', (e) => {
             const selectedCard = e.target.closest('.radio-card');
             if (!selectedCard) return;
@@ -376,8 +350,7 @@ function updateIdentityDisplay(selectedPersona) {
             selectedCard.classList.add('selected');
             
             const selectedPersona = selectedCard.dataset.value;
-            // עדכון תצוגת הזהות
-updateIdentityDisplay(selectedPersona);
+            
             const skeletonCheckbox = document.getElementById('slAddSkeleton');
             const sourceSelect = sourceProtocolSection.querySelector('select');
             
@@ -410,8 +383,6 @@ updateIdentityDisplay(selectedPersona);
         sourceProtocolSection.querySelector('select').value = 'academic';
         document.getElementById('slAddSkeleton').checked = true;
         document.getElementById('slAddSkeleton').disabled = true;
-        // Initialize identity display (interpreter is selected by default)
-updateIdentityDisplay('interpreter');
         
         const academicSourceProtocolText = `
 ## 4. פרוטוקול סינון מקורות
