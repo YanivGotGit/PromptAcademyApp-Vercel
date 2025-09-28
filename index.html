@@ -38,22 +38,29 @@
         .btn-secondary:hover { background-color: #e0e7ff; }
         .loader { border: 4px solid rgba(255, 255, 255, 0.3); border-top: 4px solid #fff; border-radius: 50%; width: 24px; height: 24px; animation: spin 1s linear infinite; }
         .radio-card {
-    border: 2px solid #e5e7eb;
+    border: 2px solid transparent; /* מסגרת שקופה כברירת מחדל */
     border-radius: 1rem;
     padding: 1.5rem;
     cursor: pointer;
-    background-color: white; /* נוודא רקע לבן */
+    background-color: #f5f3ff; /* צבע סגלגל בהיר מאוד, כבקשתך */
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
     transition: all 0.2s ease-in-out;
 }
-        .radio-card:hover {
-    border-color: #a5b4fc;
-    transform: translateY(-4px);
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -4px rgba(0, 0, 0, 0.07);
+
+.radio-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.1), 0 4px 6px -4px rgba(99, 102, 241, 0.1);
 }
-    .radio-card:active {
-    transform: translateY(2px); /* מוריד את הכפתור מעט למטה */
-    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); /* צל קטן יותר המדמה לחיצה */
+
+.radio-card.selected {
+    background-color: #eef2ff; /* רקע מעט כהה יותר בבחירה */
+    border-color: #6366f1; /* מסגרת ברורה בצבע המותג */
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2); /* הצללה חיצונית למיקוד */
+}
+
+.radio-card:active {
+    transform: translateY(1px);
+    box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.05); /* צל פנימי לדימוי לחיצה */
 }    
         input[type="checkbox"]:disabled { cursor: not-allowed; opacity: 0.6; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
