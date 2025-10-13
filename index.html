@@ -157,10 +157,25 @@
             margin-top: 0;
             padding: 0;
         }
+        #install-banner {
+    transform: translateY(-100%);
+    transition: transform 0.3s ease-in-out;
+}
+
+#install-banner:not(.hidden) {
+    transform: translateY(0);
+}
     </style>
 </head>
 <body class="text-gray-800">
-
+    <body>
+    <div id="install-banner" class="fixed top-0 left-0 right-0 bg-blue-600 text-white p-3 shadow-lg flex items-center justify-between z-50 hidden">
+        <p class="font-semibold">התקן את אפליקציית פרומפטים לחוויה מהירה יותר!</p>
+        <div class="flex items-center gap-4">
+            <button id="install-button" class="bg-white text-blue-700 font-bold py-2 px-4 rounded-full hover:bg-blue-100 transition-all">התקן</button>
+            <button id="close-install-banner" class="text-2xl leading-none">&times;</button>
+        </div>
+    </div>
     <div id="app">
         <main id="mainScreen" class="container mx-auto px-4 py-12 md:py-16 min-h-screen flex items-center">
             <div class="text-center w-full">
@@ -185,12 +200,6 @@
                         <button onclick="switchView('strategyLabScreen')" class="btn btn-primary w-full">למתקדמים</button>
                     </div>
                 </div>
-                <div class="max-w-4xl mx-auto mt-8 text-center">
-    <button id="install-button" class="btn btn-secondary hidden">
-        <span class="material-symbols-outlined">download</span>
-        התקן את האפליקציה
-    </button>
-</div>
                 <div class="text-center mt-20 pt-8 border-t">
                     <p class="font-bold gemini-animated-gradient">Powered by Gemini AI</p>
                     <p class="text-sm text-gray-500 mt-1">מו"פ הנדסת פרומפטים בשיתוף Gemini AI</p>
@@ -638,18 +647,15 @@ ${refinedTask}`;
                     slBuildBtnLoader.classList.add('hidden');
                     slBuildBtn.disabled = false;
                 }
-            });
-        }
-        // ==========================================================
-// ▼ הוסף את הקוד הבא בסוף תגית ה-script הקיימת ▼
 
 let deferredPrompt;
+const installBanner = document.getElementById('install-banner');
 const installButton = document.getElementById('install-button');
+const closeButton = document.getElementById('close-install-banner');
 
 // 1. רישום ה-Service Worker
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-        // ודא שהנתיב לקובץ נכון. במקרה שלך: '/service-worker.js'
         navigator.serviceWorker.register('/service-worker.js')
             .then(registration => console.log('Service Worker registered successfully:', registration))
             .catch(err => console.log('Service Worker registration failed:', err));
@@ -658,49 +664,49 @@ if ('serviceWorker' in navigator) {
 
 // 2. האזנה לאירוע beforeinstallprompt
 window.addEventListener('beforeinstallprompt', (e) => {
-    // מנע מהדפדפן להציג את הבאנר האוטומטי
     e.preventDefault();
-    // שמור את האירוע כדי שנוכל להפעיל אותו מאוחר יותר
     deferredPrompt = e;
-    // הצג את כפתור ההתקנה שהכנו
-    if (installButton) {
-        installButton.classList.remove('hidden');
+    // הצג את הבאנר
+    if (installBanner) {
+        installBanner.classList.remove('hidden');
     }
-    console.log('`beforeinstallprompt` event was fired.');
 });
 
-// 3. הוספת מאזין אירועים לכפתור ההתקנה
+// 3. הוספת מאזין לכפתור ההתקנה בתוך הבאנר
 if (installButton) {
     installButton.addEventListener('click', async () => {
-        // הסתר את הכפתור שלנו, כי הבקשה היא חד-פעמית
-        installButton.classList.add('hidden');
+        // הסתר את הבאנר
+        if (installBanner) {
+            installBanner.classList.add('hidden');
+        }
         
         if (deferredPrompt) {
-            // הצג את חלון בקשת ההתקנה של הדפדפן
             deferredPrompt.prompt();
-            
-            // המתן לתגובת המשתמש
             const { outcome } = await deferredPrompt.userChoice;
             console.log(`User response to the install prompt: ${outcome}`);
-            
-            // נקה את המשתנה
             deferredPrompt = null;
         }
     });
 }
 
-// 4. האזנה לאירוע התקנת האפליקציה
+// 4. הוספת מאזין לכפתור הסגירה של הבאנר
+if (closeButton) {
+    closeButton.addEventListener('click', () => {
+        if (installBanner) {
+            installBanner.classList.add('hidden');
+        }
+    });
+}
+
+// 5. האזנה לאירוע התקנת האפליקציה
 window.addEventListener('appinstalled', () => {
-  // הסתר את כפתור ההתקנה אם הוא עדיין גלוי
-  if (installButton) {
-        installButton.classList.add('hidden');
+  if (installBanner) {
+        installBanner.classList.add('hidden');
   }
   deferredPrompt = null;
   console.log('PWA was installed');
 });
 
-// ▲ עד כאן ▲
-// ==========================================================
     </script>
 </body>
 </html>
