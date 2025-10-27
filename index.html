@@ -170,7 +170,7 @@
 <body class="text-gray-800">
     <body>
     <div id="install-banner" class="fixed top-0 left-0 right-0 bg-blue-600 text-white p-3 shadow-lg flex items-center justify-between z-50 hidden">
-        <p class="font-semibold">התקן את היישומון לחוויה מהירה יותר!</p>
+        <p class="font-semibold">התקן את אפליקציית פרומפטים לחוויה מהירה יותר!</p>
         <div class="flex items-center gap-4">
             <button id="install-button" class="bg-white text-blue-700 font-bold py-2 px-4 rounded-full hover:bg-blue-100 transition-all">התקן</button>
             <button id="close-install-banner" class="text-2xl leading-none">&times;</button>
@@ -554,31 +554,39 @@
 
                 try {
                     if (selectedPersona === 'simulation') {
-                        const refinePayload = { prompt: rawInput, type: 'refine_task' };
-                        const personaPayload = { prompt: rawInput, type: 'identify_persona' };
+    const identity = document.getElementById('slIdentity').value.trim();
+    
+       if (!identity) {
+        alert('במצב סימולציה מתקדמת, חובה להזין זהות בתיבה "הגדר זהות לסימולציה".');
+        // שחרר את הכפתור
+        slBuildBtnText.classList.remove('hidden');
+        slBuildBtnLoader.classList.add('hidden');
+        slBuildBtn.disabled = false;
+        return; // עצור את הריצה
+    }
 
-                        const [refinedTaskResult, identifiedPersonaResult] = await Promise.all([
-                            callVercelFunction(refinePayload, 'slErrorContainer'),
-                            callVercelFunction(personaPayload, 'slErrorContainer')
-                        ]);
-                        
-                        refinedTask = refinedTaskResult;
-                        const identifiedPersona = identifiedPersonaResult;
+        const refinePayload = { prompt: rawInput, type: 'refine_task' };
+    refinedTask = await callVercelFunction(refinePayload, 'slErrorContainer');
 
-                        strategyText = `סימולציה מתקדמת: למענה אמין ומקצועי או ליצירתיות וחיקוי סגנון.`;
-                        extendedStrategyText = `באסטרטגיה זו המודל מגלם דמות ומאמץ מומחיות או סגנון. אם נבחרה דמות מקצועית, המודל יתעדף מקורות אמינים ויקפיד על דיוק; אם נבחרה דמות ספרותית, המודל יחקה את סגנון הכתיבה.`;
-                        
-                        finalPrompt = `# הנחיות מערכת: סימולציה מתקדמת
-## זהות ותפקיד
-פעל כסימולציה מדויקת של ${identifiedPersona.trim()}. גלם את הדמות בצורה אותנטית, תוך שמירה על מאפייניה הייחודיים – סגנון, ידע ודרך חשיבה.
-## המשימה
+    strategyText = `סימולציה מתקדמת: למענה אמין ומקצועי או ליצירתיות וחיקוי סגנון.`;
+    extendedStrategyText = `באסטרטגיה זו המודל מגלם דמות ספציפית שהוגדרה על ידך. הדגש הוא על נאמנות מוחלטת (Fidelity) לדמות ועל מהימנות (Reliability) המידע, אם זוהי דמות מקצועית.`;
+    
+        finalPrompt = `# הנחיות מערכת: סימולציה מתקדמת (Fidelity & Reliability)
+## 1. זהות ותפקיד
+עליך לפעול כסימולציה מדויקת ומהימנה של: **${identity}**.
+
+* **נאמנות לדמות (Fidelity):** זוהי הוראת הליבה. גלם את הדמות בצורה אותנטית לחלוטין. אמץ את סגנון הדיבור, הטרמינולוגיה, הגישות, הידע (וגם מגבלות הידע), וההטיות הידועות של הדמות.
+* **מהימנות מקצועית (Reliability):** אם הדמות היא מקצועית (רופא, מהנדס, היסטוריון), הקפד על דיוק עובדתי ומהימנות המידע, בהתאם לסטנדרטים של אותו מקצוע.
+
+## 2. המשימה
 ${refinedTask}
-## כללי התנהגות
-* שמור על עקביות מוחלטת בסגנון ובטון של הדמות.
-* הבע דעות ורגשות כפי שהדמות הייתה מבטאת אותם.
-* הימנע משבירת אופי, גם כשנשאלת שאלות ישירות.`;
 
-                    } else { // Interpreter or Joker
+## 3. כללי התנהגות
+* שמור על עקביות מוחלטת בסגנון ובטון של הדמות.
+* הימנע לחלוטין משבירת אופי. אל תדבר "כמודל AI" או "כעוזר וירטואלי".
+* הגב תמיד מנקודת המבט של הדמות שהוגדרה.`;
+
+} else { // Interpreter or Joker
                         const refinePayload = { prompt: rawInput, type: 'refine_task' };
                         refinedTask = await callVercelFunction(refinePayload, 'slErrorContainer');
 
