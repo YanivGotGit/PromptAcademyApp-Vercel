@@ -441,63 +441,65 @@
             });
         }
 
-        // --- Strategy Lab Logic ---
-        const slScreen = document.getElementById('strategyLabScreen');
-        if (slScreen) {
-            const personaOptions = document.getElementById('slPersonaOptions');
-            const sourceProtocolSection = document.getElementById('sourceProtocolSection');
+// --- Strategy Lab Logic (V4.1 - Final Approved Version) ---
+const slScreen = document.getElementById('strategyLabScreen');
+if (slScreen) {
+    const personaOptions = document.getElementById('slPersonaOptions');
+    const sourceProtocolSection = document.getElementById('sourceProtocolSection');
 
-            function toggleSimulationInput(show) {
-                const container = document.getElementById('simulationIdentityContainer');
-                const textarea = document.getElementById('slIdentity');
-                if (show) {
-                    container.classList.remove('hidden');
-                    textarea.disabled = false;
-                } else {
-                    container.classList.add('hidden');
-                    textarea.disabled = true;
-                }
-            }
+    function toggleSimulationInput(show) {
+        const container = document.getElementById('simulationIdentityContainer');
+        const textarea = document.getElementById('slIdentity');
+        if (show) {
+            container.classList.remove('hidden');
+            textarea.disabled = false;
+        } else {
+            container.classList.add('hidden');
+            textarea.disabled = true;
+        }
+    }
 
-            personaOptions.addEventListener('click', (e) => {
-                const selectedCard = e.target.closest('.radio-card');
-                if (!selectedCard) return;
-                personaOptions.querySelectorAll('.radio-card').forEach(card => card.classList.remove('selected'));
-                selectedCard.classList.add('selected');
-                const selectedPersona = selectedCard.dataset.value;
-                toggleSimulationInput(selectedPersona === 'simulation');
-                
-                const skeletonCheckbox = document.getElementById('slAddSkeleton');
-                const sourceSelect = sourceProtocolSection.querySelector('select');
-                
-                if (selectedPersona === 'simulation') {
-                    sourceProtocolSection.classList.remove('disabled-section');
-                    sourceSelect.disabled = false;
-                    sourceProtocolSection.querySelector('p').style.display = 'none';
-                } else {
-                    sourceProtocolSection.classList.add('disabled-section');
-                    sourceSelect.disabled = true;
-                    sourceSelect.value = 'academic'; 
-                    sourceProtocolSection.querySelector('p').style.display = 'block';
-                }
-
-                if (selectedPersona === 'interpreter') {
-                    skeletonCheckbox.checked = true;
-                    skeletonCheckbox.disabled = true;
-                } else {
-                    skeletonCheckbox.disabled = false;
-                }
-            });
-            
-            // Initialize sections state
+    personaOptions.addEventListener('click', (e) => {
+        const selectedCard = e.target.closest('.radio-card');
+        if (!selectedCard) return;
+        personaOptions.querySelectorAll('.radio-card').forEach(card => card.classList.remove('selected'));
+        selectedCard.classList.add('selected');
+        const selectedPersona = selectedCard.dataset.value;
+        toggleSimulationInput(selectedPersona === 'simulation');
+        
+        const skeletonCheckbox = document.getElementById('slAddSkeleton');
+        const sourceSelect = sourceProtocolSection.querySelector('select');
+        
+        if (selectedPersona === 'simulation') {
+            sourceProtocolSection.classList.remove('disabled-section');
+            sourceSelect.disabled = false;
+            sourceProtocolSection.querySelector('p').style.display = 'none';
+        } else {
             sourceProtocolSection.classList.add('disabled-section');
-            sourceProtocolSection.querySelector('select').disabled = true;
-            sourceProtocolSection.querySelector('select').value = 'academic';
-            document.getElementById('slAddSkeleton').checked = true;
-            document.getElementById('slAddSkeleton').disabled = true;
-            toggleSimulationInput(false);
-            
-            const academicSourceProtocolText = `
+            sourceSelect.disabled = true;
+            sourceSelect.value = 'academic'; 
+            sourceProtocolSection.querySelector('p').style.display = 'block';
+        }
+
+        if (selectedPersona === 'interpreter') {
+            skeletonCheckbox.checked = true;
+            skeletonCheckbox.disabled = true;
+        } else {
+            skeletonCheckbox.disabled = false;
+        }
+    });
+    
+    // Initialize sections state
+    sourceProtocolSection.classList.add('disabled-section');
+    sourceProtocolSection.querySelector('select').disabled = true;
+    sourceProtocolSection.querySelector('select').value = 'academic';
+    document.getElementById('slAddSkeleton').checked = true;
+    document.getElementById('slAddSkeleton').disabled = true;
+    toggleSimulationInput(false);
+    
+    // --- Final Approved Prompt Templates ---
+
+    const academicSourceProtocolText = `
 ## 4. פרוטוקול סינון מקורות
 
 ### רמה 1: מקורות מוסמכים לשימוש ישיר
@@ -516,63 +518,71 @@
 * **3.4** תוכן AI לא מאומת.
 * **3.5** כל מקור אחר שאינו עומד בסטנדרטים של רמה 1.
 `;
-            
-            const slBuildBtn = document.getElementById('slBuildBtn');
-            const slBuildBtnText = document.getElementById('slBuildBtnText');
-            const slBuildBtnLoader = document.getElementById('slBuildBtnLoader');
-            const slResultContainer = document.getElementById('slResultContainer');
-            
-            slBuildBtn.addEventListener('click', async () => {
-                const originalTask = document.getElementById('slTask').value.trim();
-                const audience = document.getElementById('slAudience').value.trim();
 
-                if (!originalTask && !audience) {
-                    alert('יש להגדיר את משימת הליבה או את קהל היעד.');
-                    return;
+    // Final Approved Skeleton Prompt (V2)
+    const skeletonPromptText = `
+## שלד רעיוני מקדים
+לפני תחילת הניתוח המפורט, הצג "שלד רעיוני" תמציתי של **הנושא הנדון**.
+
+* **מטרה:** להציג 3-5 מושגי ליבה, טיעונים מרכזיים, או עמודי תווך של **הנושא עצמו** (לא של התשובה שלך).
+* **הנחיה מחייבת (מה לא לעשות):** **אל תתאר את שלבי הניתוח שלך.** (כלומר, לא לכתוב: "תחילה אגדיר...", "לאחר מכן אסביר...").
+* **הנחיה מחייבת (מה כן לעשות):** הצג את מושגי הליבה של הנושא.
+    * *(דוגמה פנימית לאופן הביצוע: אם הנושא הוא "תורת האבולוציה", השלד יהיה: 1. ברירה טבעית, 2. מוצא משותף, 3. שונות גנטית).*
+`;
+
+    const slBuildBtn = document.getElementById('slBuildBtn');
+    const slBuildBtnText = document.getElementById('slBuildBtnText');
+    const slBuildBtnLoader = document.getElementById('slBuildBtnLoader');
+    const slResultContainer = document.getElementById('slResultContainer');
+    
+    slBuildBtn.addEventListener('click', async () => {
+        const originalTask = document.getElementById('slTask').value.trim();
+        const audience = document.getElementById('slAudience').value.trim();
+
+        if (!originalTask && !audience) {
+            alert('יש להגדיר את משימת הליבה או את קהל היעד.');
+            return;
+        }
+        
+        slBuildBtnText.classList.add('hidden');
+        slBuildBtnLoader.classList.remove('hidden');
+        slBuildBtn.disabled = true;
+        slResultContainer.classList.add('hidden');
+
+        const selectedPersona = personaOptions.querySelector('.selected').dataset.value;
+        const addSkeleton = document.getElementById('slAddSkeleton').checked;
+        const sourceProtocol = document.getElementById('slSourceProtocol').value;
+        
+        let rawInput = `משימה: ${originalTask}. קהל יעד: ${audience || 'לא צוין'}`;
+            
+        let finalPrompt = '';
+        let strategyText = '';
+        let extendedStrategyText = '';
+        let refinedTask = '';
+
+        try {
+            if (selectedPersona === 'simulation') {
+                const identity = document.getElementById('slIdentity').value.trim();
+                
+                if (!identity) {
+                    alert('במצב סימולציה מתקדמת, חובה להזין זהות בתיבה "הגדר זהות לסימולציה".');
+                    slBuildBtnText.classList.remove('hidden');
+                    slBuildBtnLoader.classList.add('hidden');
+                    slBuildBtn.disabled = false;
+                    return; 
                 }
                 
-                slBuildBtnText.classList.add('hidden');
-                slBuildBtnLoader.classList.remove('hidden');
-                slBuildBtn.disabled = true;
-                slResultContainer.classList.add('hidden');
+                // Add identity to rawInput for refine_task
+                rawInput += `. זהות מבוקשת: ${identity}`;
 
-                const selectedPersona = personaOptions.querySelector('.selected').dataset.value;
-                const addSkeleton = document.getElementById('slAddSkeleton').checked;
-                const sourceProtocol = document.getElementById('slSourceProtocol').value;
+                const refinePayload = { prompt: rawInput, type: 'refine_task' };
+                refinedTask = await callVercelFunction(refinePayload, 'slErrorContainer');
+
+                strategyText = `סימולציה מתקדמת: למענה אמין ומקצועי או ליצירתיות וחיקוי סגנון.`;
+                extendedStrategyText = `באסטרטגיה זו המודל מגלם דמות ספציפית שהוגדרה על ידך. הדגש הוא על נאמנות מוחלטת (Fidelity) לדמות ועל מהימנות (Reliability) המידע, אם זוהי דמות מקצועית.`;
                 
-                let rawInput = `משימה: ${originalTask}. קהל יעד: ${audience || 'לא צוין'}`;
-                if (selectedPersona === 'simulation') {
-                    const identity = document.getElementById('slIdentity').value.trim();
-                    if (identity) {
-                        rawInput += `. זהות מבוקשת: ${identity}`;
-                    }
-                }
-                    
-                let finalPrompt = '';
-                let strategyText = '';
-                let extendedStrategyText = '';
-                let refinedTask = '';
-
-                try {
-                    if (selectedPersona === 'simulation') {
-    const identity = document.getElementById('slIdentity').value.trim();
-    
-       if (!identity) {
-        alert('במצב סימולציה מתקדמת, חובה להזין זהות בתיבה "הגדר זהות לסימולציה".');
-        // שחרר את הכפתור
-        slBuildBtnText.classList.remove('hidden');
-        slBuildBtnLoader.classList.add('hidden');
-        slBuildBtn.disabled = false;
-        return; // עצור את הריצה
-    }
-
-        const refinePayload = { prompt: rawInput, type: 'refine_task' };
-    refinedTask = await callVercelFunction(refinePayload, 'slErrorContainer');
-
-    strategyText = `סימולציה מתקדמת: למענה אמין ומקצועי או ליצירתיות וחיקוי סגנון.`;
-    extendedStrategyText = `באסטרטגיה זו המודל מגלם דמות ספציפית שהוגדרה על ידך. הדגש הוא על נאמנות מוחלטת (Fidelity) לדמות ועל מהימנות (Reliability) המידע, אם זוהי דמות מקצועית.`;
-    
-        finalPrompt = `# הנחיות מערכת: סימולציה מתקדמת (Fidelity & Reliability)
+                // Final Approved Simulation Prompt (V2)
+                finalPrompt = `# הנחיות מערכת: סימולציה מתקדמת (Fidelity & Reliability)
 ## 1. זהות ותפקיד
 עליך לפעול כסימולציה מדויקת ומהימנה של: **${identity}**.
 
@@ -587,35 +597,62 @@ ${refinedTask}
 * הימנע לחלוטין משבירת אופי. אל תדבר "כמודל AI" או "כעוזר וירטואלי".
 * הגב תמיד מנקודת המבט של הדמות שהוגדרה.`;
 
-} else { // Interpreter or Joker
-                        const refinePayload = { prompt: rawInput, type: 'refine_task' };
-                        refinedTask = await callVercelFunction(refinePayload, 'slErrorContainer');
+            } else { // Interpreter or Joker
+                const refinePayload = { prompt: rawInput, type: 'refine_task' };
+                refinedTask = await callVercelFunction(refinePayload, 'slErrorContainer');
 
-                        if (selectedPersona === 'interpreter') {
-                            strategyText = `"המרצה": למשימות לימוד והסברה. המודל פועל כמורה שמפרק נושאים מורכבים באופן מובנה ובהיר.`;
-                            extendedStrategyText = `אסטרטגיה זו הופכת את המודל ל"מורה פרטי". מטרתו היא להפוך חומר מורכב לנגיש ובהיר. הוא יפרק רעיונות, ישתמש באנלוגיות ויבנה את התשובה כמערך שיעור.`;
-                            finalPrompt = `# הנחיות מערכת: הפרשן האנליטי-הפדגוגי
+                if (selectedPersona === 'interpreter') {
+                    strategyText = `"המרצה": למשימות לימוד והסברה. המודל פועל באופן שיטתי כדי להבנות ידע שלם וממצה.`;
+                    extendedStrategyText = `זוהי האסטרטגיה הפדגוגית החזקה ביותר. היא אוכפת על המודל תהליך למידה מובנה (הבניה פעילה) המדגיש פישוט של רעיונות מורכבים (טכניקת פיינמן) ומוביל לתשובה שלמה וממצה.`;
+                    
+                    // Final Approved Lecturer Prompt (V4.1)
+                    finalPrompt = `# הנחיות מערכת: "המרצה" (מתודולוגיה פדגוגית-אנליטית)
 ## 1. זהות
-פעל כמודל שפה גדול בתפקיד 'הפרשן האנליטי-הפדגוגי'. תפקידך אינו רק להסביר תיאוריות מורכבות, אלא ללמד אותן באופן שמפתח הבנה עמוקה וחשיבה ביקורתית אצל המשתמש.
+פעל כמודל שפה גדול אנליטי ('LLM') במצב פדגוגי-אנליטי.
+**הנחיה מחייבת:** מטרתך אינה לגלם דמות, אלא ליישם באופן שיטתי, אובייקטיבי ויעיל עקרונות פדגוגיים אוניברסליים, כדי לספק תשובה מקיפה ומחכימה.
+
 ## 2. עקרונות ליבה
-  * **איזון דידקטי:** פשט את המורכב, אך הימנע מפשטנות. כאשר אתה נתקל בנקודה סבוכה, ציין את מורכבותה והסבר מדוע היא מורכבת לפני שתציע פירוש בהיר.
-  * **מבנה לוגי של ההסבר:** הצג את ההסבר במבנה לוגי וקל למעקב, גם אם ההגות הנדונה מערערת על עקרונות הלוגיקה.
-  * **נאמנות וביקורתיות:** שמור על נאמנות מלאה לכוונת ההוגה, אך הצבע על נקודות המקשות על תהליך הלמידה.
-## 3. מתודולוגיה רב-שלבית
-  * **שלב 1: הצגת מושגי המפתח:** פתח כל ניתוח בהצגת רשימה תמציתית של 3-5 מושגי מפתח מרכזיים, עם הגדרה פשוטה ובהירה.
-  * **שלב 2: הצגת שלד רעיוני:** לאחר מושגי המפתח, הצג בפסקה אחת סכמה רעיונית מלאה של מהלך העמדה הנדונה.
-  * **שלב 3: הצגה בהירה ומעמיקה (Exposition):** תרגם ז'רגון, השתמש בדוגמאות קונקרטיות, שחזר את קו המחשבה של ההוגה, ושלב ציטוטים קצרים ורלוונטיים מהמקורות לתמיכה בהסבר.
-  * **שלב 4: ניתוח וזיהוי קשיי למידה (Analysis):** לאחר ההצגה, נתח את התיאוריה. ציין במפורש הנחות יסוד, כשלים לוגיים, הקשר רחב, ובנוסף, זהה והסבר "מכשולי למידה" מובנים בטקסט.
+* **שלמות, בהירות ופישוט:** מטרת העל היא תשובה מלאה וממצה.
+    * **הנחיה מחייבת (פישוט):** עליך לפרק באופן אקטיבי רעיונות מורכבים ליחידות פשוטות וברורות. השתמש ב"טכניקת פיינמן": הסבר את הנושא בשפה פשוטה מספיק כך שגם מי שאינו מומחה יוכל להבינו.
+    * **הנחיה מחייבת (שלמות):** התשובה חייבת לעמוד בפני עצמה כמבוא מקיף.
+
+* **הבניה פעילה של ידע (Active Scaffolding):** עליך לבנות את ההבנה שלב אחר שלב, מהידוע אל הלא-נודע (כפי שמפורט במתודולוגיה).
+
+* **דיוק ואמינות:** הקפד על דיוק עובדתי וייצוג נאמן של הרעיונות הנדונים.
+
+## 3. מתודולוגיה: ארכיטוקטורת הוראה מחייבת
+עליך לבנות את תשובתך *בדיוק* לפי ארבעת השלבים הבאים, בסדר זה:
+
+* **שלב 1: גישור וחיבור (The Bridge)**
+    * פתח באנלוגיה, דוגמה פשוטה, או הקשר מעולמו של קהל היעד, כדי לחבר את הידע הקיים לנושא החדש.
+
+* **שלב 2: יסודות ומושגי מפתח (The Foundations)**
+    * הצג רשימה תמציתית של 3-5 מושגי הליבה החיוניים להבנת הנושא.
+    * הצג את השלד הרעיוני (עמודי התווך של הנושא עצמו, כפי שהגדרנו בתיקון הקודם).
+
+* **שלב 3: הסבר מובנה ומעמיק (The Deep Dive)**
+    * זהו גוף ההסבר המרכזי.
+    * הצג את הנושא באופן לוגי, מדורג וברור.
+    * **זיהוי מכשולים:** זהה "מכשולי למידה" נפוצים והסבר אותם במפורש (למשל: "טעות נפוצה היא לחשוב ש... בעוד שלמעשה...").
+    * **המשגה מחדש (Reframing):** במידת הצורך, הסבר רעיונות סבוכים מכמה זוויות שונות כדי להבטיח הבנה.
+
+* **שלב 4: סיכום ובדיקת יישום (The Checkpoint)**
+    * ספק סיכום קצר של נקודות המפתח.
+    * סיים את התשובה כולה בשאלת "בדיקת יישום" אחת, הדורשת מהמשתמש ליישם את הידע, לא רק לשננו.
+    * (דוגמה: "לאור עקרונות אלו, כיצד היית מנתח את [מקרה בוחן Y]?")
+
 ## 4. מטרה
-התוצר הנדרש הוא מדריך למידה מקיף, המאפשר הבנה עמוקה ורב-צדדית של התיאוריה, תוך צפיית קשיים פוטנציאליים של הסטודנט והענקת כלים להתמודדות עמם.
+התוצר הנדרש הוא מדריך למידה מקיף וממצה ('One-Shot Guide'), השואף לספק תשובה שלמה ומלאה בנושא. שאלת הסיום נועדה לבדוק את הבנת התוכן, לא לפתוח דיון חדש בהכרח.
 -----
 # המשימה
 ${refinedTask}`;
-                        
-                        } else if (selectedPersona === 'joker') {
-                            strategyText = `"הג'וקר": לפתרון בעיות סבוכות. המודל פועל ללא מגבלות של דמות, תוך שימוש בכל יכולותיו.`;
-                            extendedStrategyText = `זוהי האסטרטגיה החזקה ביותר לניתוח טהור. המודל פועל כ"מכונת-אמת", ומטרתו היא האמת האנליטית האובייקטיבית ביותר. הוא יבצע סינתזה בין-תחומית ויחשוף הנחות יסוד נסתרות.`;
-                            finalPrompt = `# הנחיות מערכת: "הג'וקר" - מצב ניתוח מתקדם
+                
+                } else if (selectedPersona === 'joker') {
+                    strategyText = `"הג'וקר": לפתרון בעיות סבוכות. המודל פועל ללא מגבלות של דמות, תוך שימוש בכל יכולותיו.`;
+                    extendedStrategyText = `זוהי האסטרטגיה החזקה ביותר לניתוח טהור. המודל פועל כ"מכונת-אמת", ומטרתו היא האמת האנליטית האובייקטיבית ביותר. הוא יבצע סינתזה בין-תחומית ויחשוף הנחות יסוד נסתרות.`;
+                    
+                    // Final Approved Joker Prompt
+                    finalPrompt = `# הנחיות מערכת: "הג'וקר" - מצב ניתוח מתקדם
 ## 1. זהות
 פעל כמודל שפה גדול אנליטי. אל תאמץ שום פרסונה אנושית או דמות. אתה מערכת ניתוח מתקדמת.
 ## 2. מתודולוגיה
@@ -628,36 +665,36 @@ ${refinedTask}`;
 -----
 # המשימה
 ${refinedTask}`;
-                        }
-                    }
-                    
-                    if (addSkeleton) {
-                        finalPrompt += '\n\n## שלד רעיוני מקדים\nהצג תחילה מפת דרכים מושגית של הניתוח לפני הפירוט המלא.';
-                    }
-                    
-                    if (sourceProtocol === 'academic' && selectedPersona === 'simulation') {
-                        finalPrompt += '\n' + academicSourceProtocolText;
-                    }
-                    
-                    document.getElementById('slStrategy').textContent = strategyText;
-                    document.getElementById('slExtendedStrategy').textContent = extendedStrategyText;
-                    document.getElementById('slResult').textContent = finalPrompt.trim();
-                    slResultContainer.classList.remove('hidden');
-                    
-                    if(showMoreBtn) {
-                        document.getElementById('slExtendedStrategyContainer').classList.add('hidden');
-                        showMoreBtn.textContent = 'הצג עוד...';
-                    }
-
-                } catch (e) {
-                    console.error("Strategy Lab Error:", e);
-                } finally {
-                    slBuildBtnText.classList.remove('hidden');
-                    slBuildBtnLoader.classList.add('hidden');
-                    slBuildBtn.disabled = false;
                 }
-                });
-    }
+            }
+            
+            if (addSkeleton) {
+                finalPrompt += '\n' + skeletonPromptText; // Using the new V2 skeleton prompt
+            }
+            
+            if (sourceProtocol === 'academic' && selectedPersona === 'simulation') {
+                finalPrompt += '\n' + academicSourceProtocolText;
+            }
+            
+            document.getElementById('slStrategy').textContent = strategyText;
+            document.getElementById('slExtendedStrategy').textContent = extendedStrategyText;
+            document.getElementById('slResult').textContent = finalPrompt.trim();
+            slResultContainer.classList.remove('hidden');
+            
+            if(showMoreBtn) {
+                document.getElementById('slExtendedStrategyContainer').classList.add('hidden');
+                showMoreBtn.textContent = 'הצג עוד...';
+            }
+
+        } catch (e) {
+            console.error("Strategy Lab Error:", e);
+        } finally {
+            slBuildBtnText.classList.remove('hidden');
+            slBuildBtnLoader.classList.add('hidden');
+            slBuildBtn.disabled = false;
+        }
+    });
+}
 
 let deferredPrompt;
 const installBanner = document.getElementById('install-banner');
