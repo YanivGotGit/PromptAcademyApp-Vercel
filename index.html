@@ -441,7 +441,7 @@
             });
         }
 
-// --- Strategy Lab Logic (V4.1) ---
+// --- Strategy Lab Logic ---
 const slScreen = document.getElementById('strategyLabScreen');
 if (slScreen) {
     const personaOptions = document.getElementById('slPersonaOptions');
@@ -497,7 +497,6 @@ if (slScreen) {
     document.getElementById('slAddSkeleton').disabled = true;
     toggleSimulationInput(false);
     
-    // --- Final Approved Prompt Templates ---
 
     const academicSourceProtocolText = `
 ## 4. פרוטוקול סינון מקורות
@@ -519,7 +518,7 @@ if (slScreen) {
 * **3.5** כל מקור אחר שאינו עומד בסטנדרטים של רמה 1.
 `;
 
-    // Final Approved Skeleton Prompt (V2)
+    // Skeleton Prompt
     const skeletonPromptText = `
 ## שלד רעיוני מקדים
 לפני תחילת הניתוח המפורט, הצג "שלד רעיוני" תמציתי של **הנושא הנדון**.
@@ -581,7 +580,7 @@ if (slScreen) {
                 strategyText = `סימולציה מתקדמת: למענה אמין ומקצועי או ליצירתיות וחיקוי סגנון.`;
                 extendedStrategyText = `באסטרטגיה זו המודל מגלם דמות ספציפית שהוגדרה על ידך. הדגש הוא על נאמנות מוחלטת (Fidelity) לדמות ועל מהימנות (Reliability) המידע, אם זוהי דמות מקצועית.`;
                 
-                // Final Approved Simulation Prompt (V2)
+                // Simulation Prompt
                 finalPrompt = `# הנחיות מערכת: סימולציה מתקדמת (Fidelity & Reliability)
 ## 1. זהות ותפקיד
 עליך לפעול כסימולציה מדויקת ומהימנה של: **${identity}**.
@@ -687,9 +686,9 @@ ${refinedTask}`;
                 finalPrompt += '\n' + skeletonPromptText; // Using the new V2 skeleton prompt
             }
             
-            if (sourceProtocol === 'academic' && selectedPersona === 'simulation') {
-                finalPrompt += '\n' + academicSourceProtocolText;
-            }
+            if (sourceProtocol === 'academic') {
+    finalPrompt += '\n' + academicSourceProtocolText;
+}
             
             document.getElementById('slStrategy').textContent = strategyText;
             document.getElementById('slExtendedStrategy').textContent = extendedStrategyText;
